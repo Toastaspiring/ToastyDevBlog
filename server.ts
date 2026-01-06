@@ -1,8 +1,26 @@
 import "./loadEnv.js";
 import dns from "node:dns";
-if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder("ipv4first");
-}
+
+// Monkey-patch dns.lookup to force IPv4
+const originalLookup = dns.lookup;
+// @ts-ignore
+dns.lookup = (hostname, options, callback) => {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  } else if (!options) {
+    options = {};
+  }
+
+  // Force IPv4
+  if (typeof options === 'object') {
+    options.family = 4;
+    options.all = false; // Just one address needed
+  }
+
+  return originalLookup(hostname, options, callback);
+};
+
 import { Hono } from 'hono'
 import { serveStatic } from '@hono/node-server/serve-static'
 import { serve } from '@hono/node-server';
