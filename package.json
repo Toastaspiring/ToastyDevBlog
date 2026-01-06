@@ -6,7 +6,7 @@
     "dev": "pnpm tsx server.ts",
     "build": "vite build",
     "start": "pnpm tsx server.ts",
-    "start:render": "NODE_OPTIONS='--dns-result-order=ipv4first' pnpm tsx server.ts",
+    "start:render": "node --dns-result-order=ipv4first --import tsx/esm server.ts",
     "lint": "eslint ."
   },
   "type": "module",
