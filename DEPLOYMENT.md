@@ -14,8 +14,8 @@ Platforms like Render or Railway can automatically build and run your app whenev
 ### Steps for Render.com:
 1.  Create a **Web Service** on Render.
 2.  Connect your GitHub repository.
-3.  **Build Command**: `pnpm install && pnpm vite build`
-4.  **Start Command**: `pnpm tsx server.ts`
+3.  **Build Command**: `pnpm install --frozen-lockfile; pnpm run build`
+4.  **Start Command**: `pnpm run start`
 5.  **Environment Variables**: Add the keys from your `env.json` (`DATABASE_URL`, `JWT_SECRET`, etc.) into the Render dashboard.
 6.  **Done**: Render will detect pushes to `main` and re-deploy automatically.
 
