@@ -1,0 +1,95 @@
+.commentsSection {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--border);
+}
+
+.commentsHeader {
+    font-family: var(--font-family-heading);
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-4);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.commentList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+}
+
+.comment {
+    display: flex;
+    gap: var(--spacing-3);
+}
+
+.commentAvatar {
+    width: 32px;
+    height: 32px;
+}
+
+.commentBody {
+    flex: 1;
+}
+
+.commentHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-1);
+}
+
+.commentAuthor {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--foreground);
+}
+
+.commentDate {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.commentText {
+    color: var(--foreground);
+    line-height: 1.4;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+}
+
+.commentText a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.commentText a:hover {
+    text-decoration: underline;
+}
+
+.commentText p {
+    margin: 0;
+}
+
+.commentForm {
+    background-color: var(--surface);
+    padding: var(--spacing-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.loginPrompt {
+    text-align: center;
+    padding: var(--spacing-4);
+    background-color: var(--muted);
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+}
+
+.loginLink {
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 500;
+}

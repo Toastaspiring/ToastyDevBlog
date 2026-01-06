@@ -1,0 +1,101 @@
+.main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-8) var(--spacing-6);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-8);
+}
+
+.title {
+    font-family: var(--font-family-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.tableContainer {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: var(--spacing-4);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.table th {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: color-mix(in srgb, var(--surface), white 2%);
+}
+
+.postTitle {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.postMeta {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-2);
+    justify-content: flex-end;
+}
+
+.statusPublished {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background-color: rgba(34, 197, 94, 0.1);
+    color: var(--success);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.statusDraft {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-16);
+    color: var(--muted-foreground);
+}

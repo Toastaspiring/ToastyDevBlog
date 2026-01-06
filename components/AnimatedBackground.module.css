@@ -1,0 +1,16 @@
+.backgroundCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at bottom,
+    hsl(240, 10%, 8%),
+    var(--background)
+  );
+  filter: blur(0px);
+  opacity: 1.0;
+}

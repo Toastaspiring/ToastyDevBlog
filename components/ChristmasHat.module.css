@@ -1,0 +1,6 @@
+.hat {
+  width: 60px;
+  height: auto;
+  /* Prevents the filter from being clipped */
+  overflow: visible;
+}

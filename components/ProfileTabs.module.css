@@ -1,0 +1,126 @@
+.itemsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.itemCard {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4) var(--spacing-6);
+  transition: border-color var(--animation-duration-normal) ease, box-shadow var(--animation-duration-normal) ease;
+}
+
+.itemCard:hover {
+  border-color: color-mix(in srgb, var(--border) 150%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.itemTitleLink {
+  font-family: var(--font-family-heading);
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--foreground);
+  text-decoration: none;
+  transition: color var(--animation-duration-normal) ease;
+}
+
+.itemTitleLink:hover {
+  color: var(--primary);
+}
+
+.commentContent {
+  color: var(--muted-foreground);
+  margin-bottom: var(--spacing-4);
+  font-style: italic;
+}
+
+.itemMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin-top: var(--spacing-3);
+}
+
+.metaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--muted-foreground);
+  text-decoration: none;
+  transition: color var(--animation-duration-normal) ease;
+}
+
+.metaLink:hover {
+  color: var(--accent);
+}
+
+.metaAuthor {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.metaAvatar {
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
+  border-width: 1px;
+}
+
+.metaTimestamp {
+  white-space: nowrap;
+}
+
+.createdPostHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+.createdPostStats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.statItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.infoState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-16) var(--spacing-6);
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border);
+  min-height: 250px;
+}
+
+.infoIcon {
+  color: var(--muted-foreground);
+  margin-bottom: var(--spacing-4);
+}
+
+.infoTitle {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-2);
+  color: var(--foreground);
+}
+
+.infoText {
+  color: var(--muted-foreground);
+}

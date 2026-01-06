@@ -1,0 +1,195 @@
+.main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-8) var(--spacing-4);
+  /* background-color removed */
+  min-height: 100vh;
+}
+
+.form {
+  width: 100%;
+  max-width: 850px;
+  /* Approx A4 width + margins */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+}
+
+.title {
+  font-family: var(--font-family-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* The A4 Sheet */
+.editorSheet {
+  background-color: var(--background);
+  /* Paper color */
+  padding: var(--spacing-12);
+  /* Large margins */
+  min-height: 1122px;
+  /* A4 height at 96dpi is approx 1123px */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Settings section below the sheet */
+.settingsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-6);
+  padding: var(--spacing-6);
+  background-color: var(--background);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.publishContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  background-color: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-top: var(--spacing-2);
+}
+
+.mediaHelp {
+  margin-top: var(--spacing-4);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  padding: var(--spacing-4);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.mediaHelp code {
+  font-family: var(--font-family-monospace);
+  background-color: var(--muted);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Editor Updates to look seamless */
+.editorSheet :global(.EasyMDEContainer) {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border: none;
+}
+
+.editorSheet :global(.CodeMirror) {
+  flex-grow: 1;
+  border: none;
+  background-color: transparent;
+  font-family: var(--font-family-serif);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  padding: 0;
+  color: var(--foreground);
+  /* Ensure high contrast */
+}
+
+/* Ensure inputs in sheet are visible */
+.editorSheet input {
+  background: transparent;
+  border: none;
+  color: var(--foreground);
+  outline: none;
+}
+
+.sheetHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.sheetTitleInput {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: var(--font-family-heading);
+  width: 100%;
+  color: var(--foreground);
+}
+
+.sheetTitleInput::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.sheetSlugInput {
+  font-family: var(--font-family-monospace);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  width: 100%;
+}
+
+/* Ensure high contrast */
+.editorSheet :global(.CodeMirror-cursor) {
+  border-left-color: var(--foreground) !important;
+  /* Fallback if var not set correctly or overridden */
+  border-left: 2px solid var(--foreground);
+}
+
+.editorSheet :global(.editor-toolbar) {
+  border: none;
+  background-color: transparent;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  margin-bottom: var(--spacing-4);
+}
+
+.editorSheet :global(.editor-toolbar:hover) {
+  opacity: 1;
+}
+
+.editorSheet :global(.editor-statusbar) {
+  display: none;
+  /* Hide status bar for clean look */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settingsSection {
+    grid-template-columns: 1fr;
+  }
+
+  .editorSheet {
+    padding: var(--spacing-6);
+    min-height: 80vh;
+  }
+}

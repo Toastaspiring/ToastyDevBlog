@@ -1,0 +1,134 @@
+.main {
+  width: 100%;
+  max-width: 1800px;
+  /* Allow wider screens for the 3-column layout */
+  margin: 0 auto;
+  padding: var(--spacing-8) var(--spacing-6);
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: var(--spacing-16);
+  padding: var(--spacing-12) 0;
+}
+
+/* Default: Stacked (Mobile/Tablet/Small Laptop) */
+.layoutGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  align-items: center;
+  position: relative;
+}
+
+.leftColumn {
+  width: 100%;
+  max-width: 800px;
+  /* Match EventCountdown */
+}
+
+.commentColumnWrapper {
+  width: 100%;
+  max-width: 800px;
+  /* Match Feed when stacked */
+}
+
+/* Single Column Layout for All Screens */
+.layoutGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  align-items: center;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.leftColumn {
+  width: 100%;
+  max-width: 800px;
+}
+
+
+.heroTitle {
+  font-family: var(--font-family-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--foreground);
+  margin-bottom: var(--spacing-4);
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.postsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  /* Remove max-width on the list itself, let grid handle it */
+  width: 100%;
+}
+
+
+
+
+
+.postLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-md);
+  transition: transform var(--animation-duration-normal) ease, box-shadow var(--animation-duration-normal) ease;
+}
+
+.postLink:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.postLink:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.infoState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-16) var(--spacing-6);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border);
+  min-height: 300px;
+}
+
+.infoState h2 {
+  font-family: var(--font-family-heading);
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-2);
+}
+
+.infoState p {
+  color: var(--muted-foreground);
+}
+
+.clearSearchLink {
+  color: var(--primary);
+  text-decoration: underline;
+  transition: color var(--animation-duration-fast) ease;
+}
+
+.clearSearchLink:hover {
+  color: var(--primary-foreground);
+}

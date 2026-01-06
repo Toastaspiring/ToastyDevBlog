@@ -1,0 +1,91 @@
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow);
+  transition:
+    transform var(--animation-duration-normal) ease,
+    box-shadow var(--animation-duration-normal) ease;
+}
+
+.cardTitle {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-2);
+}
+
+.cardDescription {
+  font-size: 0.9375rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-4);
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--border);
+  padding-top: var(--spacing-4);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.metaItem svg {
+  color: var(--muted-foreground);
+  flex-shrink: 0;
+}
+
+.stateMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-12) var(--spacing-6);
+  background-color: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--muted-foreground);
+}
+
+.stateMessage svg {
+  margin-bottom: var(--spacing-4);
+  color: var(--muted-foreground);
+}
+
+.stateMessage.error {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.stateMessage.error svg {
+  color: var(--error);
+}
+
+.errorMessage {
+  font-family: var(--font-family-monospace);
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--error) 80%, var(--foreground));
+  margin-top: var(--spacing-2);
+  background-color: color-mix(in srgb, var(--error) 10%, transparent);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius);
+  max-width: 100%;
+  overflow-wrap: break-word;
+}

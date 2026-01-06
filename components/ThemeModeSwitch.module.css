@@ -1,0 +1,38 @@
+.container {
+  display: inline-flex;
+  position: relative;
+}
+
+.themeButton {
+  position: relative;
+  transition: transform var(--animation-duration-normal) ease;
+}
+
+.themeButton:hover {
+  transform: scale(1.05);
+}
+
+.icon {
+  color: var(--foreground);
+  transition: transform var(--animation-duration-normal) ease;
+}
+
+.menuIcon {
+  margin-right: var(--spacing-2);
+  color: currentColor;
+}
+
+.activeItem {
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.checkmark {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+/* Dark mode adjustments */
+:global(.dark) .icon {
+  color: var(--foreground);
+}

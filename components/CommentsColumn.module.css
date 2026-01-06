@@ -1,0 +1,185 @@
+.container {
+    /* Sticky Position Logic: Handles Top/Bottom interactions naturally */
+    position: sticky;
+    /* Top Constraint: Below Header (approx 80px) */
+    top: 80px;
+
+    /* Height: Fill mostly but leave margins */
+    height: calc(100vh - 120px);
+
+    /* Remove Fixed Position properties */
+    right: auto;
+    transform: none;
+    width: 100%;
+    /* Fill the grid column */
+    max-width: none;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+
+    opacity: 0;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.minimizedTab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 50;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.minimizedTab:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+@keyframes bounceIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes appearGracefully {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-6);
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+}
+
+.headerTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.headerTitle h3 {
+    font-family: var(--font-family-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.postContext {
+    padding: var(--spacing-3) var(--spacing-6);
+    background-color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.postContextLabel {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.postContextTitle {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: var(--spacing-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-6);
+    /* Improve scrollbar appearance */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 20px;
+}
+
+/* Enhancements for PostComments when inside Column */
+.content :global(.PostComments_commentsSection) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--muted-foreground);
+    text-align: center;
+    padding: var(--spacing-6);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Slightly darker/transparent */
+}
+
+.emptyState p {
+    margin-top: var(--spacing-4);
+    font-size: 0.9rem;
+}
