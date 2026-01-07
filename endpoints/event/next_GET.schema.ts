@@ -18,7 +18,7 @@ export type OutputType =
 
 import { API_URL } from "../../helpers/api";
 
-export const getNextEvent = async (
+export const getEventNext = async (
   init?: RequestInit
 ): Promise<OutputType> => {
   const result = await fetch(`${API_URL}/_api/event/next`, {

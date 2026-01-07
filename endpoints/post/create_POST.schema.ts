@@ -22,7 +22,7 @@ export type OutputType = Selectable<BlogPosts>;
 
 import { API_URL } from "../../helpers/api";
 
-export const createPost = async (
+export const postPostCreate = async (
   body: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
