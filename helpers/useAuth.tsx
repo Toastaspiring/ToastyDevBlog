@@ -50,20 +50,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const queryClient = useQueryClient();
 
-  /* MOCK AUTH FOR DEBUGGING */
-  const status = "success";
-  const data = {
-    id: 1,
-    displayName: "MockAdmin", // No space for easy regex test
-    email: "admin@example.com",
-    avatarUrl: null,
-    role: "admin" as const,
-  };
-  const error = null as Error | null;
-  const refetch = () => { };
-  /* END MOCK AUTH */
-
-  /*
   const { data, error, status, refetch } = useQuery({
     queryKey: AUTH_QUERY_KEY,
     queryFn: async () => {
@@ -77,7 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     enabled: true,
     staleTime: Infinity,
   });
-  */
 
   const authState: AuthState =
     status === "pending"

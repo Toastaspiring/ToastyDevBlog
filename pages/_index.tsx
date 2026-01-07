@@ -10,7 +10,7 @@ import styles from "./_index.module.css";
 
 const HomePage: React.FC = () => {
   const { data: posts, isFetching, error } = usePostsQuery();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
   // State for the Active Post in the Comments Column
@@ -38,42 +38,46 @@ const HomePage: React.FC = () => {
   // Handler no longer needed for manual toggle, BUT user might click comment icon to "Force" focus or scroll to comments.
   // Actually, clicking comment icon on Desktop -> Focuses that posts (which is already focused if centered).
   // Clicking on Mobile -> Should scroll/expand to the inline comments.
-  // Toggles the inline comments for a post
-  const handleToggleComments = (postId: number) => {
-    if (activePostId === postId) {
+  // Toggles the inline comments for a post and syncs URL
+  const handleToggleComments = (post: { id: number; slug: string }) => {
+    if (activePostId === post.id) {
       setActivePostId(null);
+      // Remove param
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("post");
+      setSearchParams(newParams, { replace: true });
     } else {
-      setActivePostId(postId);
+      setActivePostId(post.id);
+      // Set param
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("post", post.slug);
+      setSearchParams(newParams, { replace: true });
     }
   };
 
   const [highlightedPostId, setHighlightedPostId] = React.useState<number | null>(null);
 
-  // Handle Hash Navigation (Highlight + Expand)
+  // Handle URL Parameter Navigation (Highlight + Expand)
   React.useEffect(() => {
-    if (posts && window.location.hash) {
-      const slug = window.location.hash.replace("#post-", "");
-      const targetPost = posts.find(p => p.slug === slug);
-
-      if (targetPost) {
-        setActivePostId(targetPost.id); // Valid requirement "unfold comment"
-        setHighlightedPostId(targetPost.id); // Valid requirement "highlight it"
-
-        // Wait for render, then scroll
-        setTimeout(() => {
-          const element = document.getElementById(`post-${targetPost.slug}`);
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (posts) {
+      const slug = searchParams.get("post");
+      if (slug) {
+        const targetPost = posts.find(p => p.slug === slug);
+        if (targetPost) {
+          if (targetPost.id !== activePostId) {
+            setActivePostId(targetPost.id); // Expand comments
           }
-        }, 300);
-
-        // Remove highlight after some time (optional, but good UX) or keep it?
-        // User asked "HIGHLIGHT it", usually implies a temporary flash or persistent state.
-        // I'll keep it persistent for now until user interacts? Or use CSS animation.
-        // Let's use a CSS class that fades out or stays. "highlighted" prop on PostCard.
+          // Optional: Scroll to it if it's the first load or explicit navigation
+          // check if we just arrived or if this is a deeper nav
+        }
+      } else {
+        // If no param, ensure closed (optional, but good for back button)
+        if (activePostId !== null) {
+          setActivePostId(null);
+        }
       }
     }
-  }, [posts]);
+  }, [posts, searchParams, activePostId]);
 
   const renderContent = () => {
     if (isFetching) {
@@ -127,7 +131,7 @@ const HomePage: React.FC = () => {
             key={post.id}
             post={post}
             isActive={activePostId === post.id}
-            onToggleComments={() => handleToggleComments(post.id)}
+            onToggleComments={() => handleToggleComments(post)}
           />
         ))}
       </div>

@@ -73,11 +73,12 @@ const SuggestionList: React.FC<{
 interface PostCommentsProps {
     postSlug: string;
     postId: number; // passed if available, though query fetches it too.
+    enabled?: boolean;
 }
 
-export const PostComments: React.FC<PostCommentsProps> = ({ postSlug, postId }) => {
+export const PostComments: React.FC<PostCommentsProps> = ({ postSlug, postId, enabled = true }) => {
     // We fetch the post details to get comments
-    const { data: post, isLoading, error } = usePostBySlugQuery(postSlug);
+    const { data: post, isLoading, error } = usePostBySlugQuery(postSlug, { enabled });
     const { authState } = useAuth();
     const createCommentMutation = useCreateCommentMutation(postSlug);
     const [commentContent, setCommentContent] = useState("");
@@ -146,7 +147,11 @@ export const PostComments: React.FC<PostCommentsProps> = ({ postSlug, postId }) 
         );
     };
 
-    if (isLoading) {
+    if (!enabled && !post) {
+        return null;
+    }
+
+    if (isLoading && enabled) {
         return <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}><Spinner size="sm" /></div>;
     }
 

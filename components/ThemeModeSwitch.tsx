@@ -74,6 +74,7 @@ export const ThemeModeSwitch = ({
                 onClick={(e) => e.stopPropagation()}
               >
                 <DropdownMenuItem
+                  className={styles.lightOption}
                   onSelect={(e) => e.preventDefault()}
                 >
                   <Sun size={16} className={styles.menuIcon} />
@@ -84,7 +85,7 @@ export const ThemeModeSwitch = ({
             <TooltipContent side="left">who likes light mode anyway</TooltipContent>
           </Tooltip>
           <DropdownMenuItem
-            className={currentMode === "dark" ? styles.activeItem : ""}
+            className={`${currentMode === "dark" ? styles.activeItem : ""} ${styles.darkOption}`}
             onClick={() => applyThemeMode("dark")}
           >
             <Moon size={16} className={styles.menuIcon} />

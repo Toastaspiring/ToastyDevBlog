@@ -108,8 +108,12 @@
 }
 
 .contentBody[data-expanded="true"] {
-  max-height: none;
-  overflow: visible;
+  /* max-height handled via inline style for animation */
+  overflow: hidden;
+  /* Keep hidden during transition, though visible usually implies auto. */
+  /* Actually, to avoid cutting off shadows or focus rings, overflow visible might be better at the end, 
+     but for height transition to work cleanly without weird clips, hidden is usually safer. 
+     Let's allow it to be visible after transition if needed, but for now we rely on the height. */
 }
 
 .expandAction {
@@ -133,6 +137,21 @@
   background-color: transparent !important;
 }
 
+/* Inline Comments Wrapper for Grid Animation */
+.inlineCommentsWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.inlineCommentsWrapper[data-active="true"] {
+  grid-template-rows: 1fr;
+}
+
+.inlineCommentsInner {
+  overflow: hidden;
+}
+
 /* Inline Comments: Visible on all screens when active */
 .inlineComments {
   display: block;
@@ -141,7 +160,7 @@
   /* Match card content padding */
   background-color: var(--surface);
   /* Match card background */
-  animation: fadeIn 0.2s ease-out;
+  /* Animation handled by wrapper now */
 }
 
 /* Remove default border/margin from internal PostComments component since we handle it here */
@@ -158,17 +177,7 @@
   opacity: 0.5;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* Image Styling within Markdown */
 .imageContainer {
@@ -194,4 +203,311 @@
   color: var(--muted-foreground);
   text-align: center;
   font-style: italic;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bounce {
+  animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Markdown Enhanced Styles */
+
+/* Tables */
+.contentBody table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-4) 0;
+  font-size: 0.9rem;
+}
+
+.contentBody th,
+.contentBody td {
+  border: 1px solid var(--border);
+  padding: var(--spacing-2) var(--spacing-3);
+  text-align: left;
+}
+
+.contentBody th {
+  background-color: var(--muted);
+  font-weight: 600;
+}
+
+.contentBody tr:nth-child(even) {
+  background-color: color-mix(in srgb, var(--surface), black 2%);
+}
+
+/* Blockquotes */
+.contentBody blockquote {
+  border-left: 4px solid var(--primary);
+  margin: var(--spacing-4) 0;
+  padding-left: var(--spacing-4);
+  color: var(--muted-foreground);
+  font-style: italic;
+  background-color: var(--muted);
+  padding: var(--spacing-3);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* Code Blocks (handled by highlight.js mostly, but wrapper needs style) */
+.contentBody pre {
+  margin: var(--spacing-4) 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.contentBody code {
+  font-family: var(--font-family-mono, monospace);
+  font-size: 0.85rem;
+}
+
+/* Inline code (not in pre) */
+.contentBody :not(pre)>code {
+  background-color: var(--muted);
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 0.85em;
+}
+
+/* Task Lists */
+.contentBody ul.contains-task-list {
+  list-style-type: none !important;
+  /* Force removal of bullets */
+  padding-left: 0;
+}
+
+.contentBody li.task-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  list-style: none !important;
+  /* Double ensure no bullets */
+}
+
+/* Custom Checkbox Styling */
+.contentBody input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.1em;
+  height: 1.1em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  /* Prevent squishing */
+}
+
+.contentBody input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.contentBody input[type="checkbox"]:checked::after {
+  content: '';
+  width: 4px;
+  height: 8px;
+  border: solid var(--primary-foreground);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(0px, -1px);
+}
+
+.contentBody input[type="checkbox"]:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+/* Math */
+.contentBody .katex {
+  font-size: 1.1em;
+}
+
+.contentBody hr {
+  margin: var(--spacing-6) 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Links */
+.contentBody a,
+.contentBody a:visited {
+  color: #3b82f6 !important;
+  /* Explicit standard blue (Tailwind blue-500) to ensure visibility */
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+
+.contentBody a:hover {
+  color: #2563eb !important;
+  /* Darker blue on hover */
+}
+
+/* Remove styling for links wrapping images */
+.contentBody a:has(img) {
+  text-decoration: none !important;
+  color: inherit !important;
+  border: none !important;
+}
+
+/* Remove styling for links within headers (subtitles) */
+.contentBody h1 a,
+.contentBody h2 a,
+.contentBody h3 a,
+.contentBody h4 a,
+.contentBody h5 a,
+.contentBody h6 a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+}
+
+.contentBody hr {
+  margin: var(--spacing-6) 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Lists */
+.contentBody ul,
+.contentBody ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.contentBody ul {
+  list-style-type: disc;
+}
+
+.contentBody ol {
+  list-style-type: decimal;
+}
+
+/* 
+ * Fix for Task Lists: 
+ * remark-gfm adds 'task-list-item' class to li, but sometimes structure varies.
+ * We use :has() (modern) or specifics to override the default 'disc' from above.
+ */
+.contentBody ul:has(> li input[type="checkbox"]),
+.contentBody ul.contains-task-list {
+  list-style-type: none !important;
+  padding-left: 0;
+}
+
+.contentBody li {
+  margin: 0.25rem 0;
+}
+
+/* Task List Item specific */
+.contentBody li.task-list-item,
+.contentBody li:has(> input[type="checkbox"]) {
+  list-style: none !important;
+  display: flex;
+  /* Removes display: list-item marker */
+  align-items: flex-start;
+  /* Align checkbox with top of text */
+  gap: var(--spacing-2);
+}
+
+/* Nested lists */
+.contentBody ul ul,
+.contentBody ol ul,
+.contentBody ul ol,
+.contentBody ol ol {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Custom Checkbox Styling */
+.contentBody input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25em;
+  /* Slightly larger */
+  height: 1.25em;
+  border: 2px solid var(--border);
+  /* Thicker border */
+  border-radius: var(--radius-sm);
+  background-color: var(--surface);
+  margin-top: 0.15em;
+  /* Align with text baseline visually */
+  position: relative;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.contentBody input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.contentBody input[type="checkbox"]:checked::after {
+  content: '';
+  width: 0.4em;
+  height: 0.7em;
+  border: solid var(--primary-foreground);
+  border-width: 0 2.5px 2.5px 0;
+  /* Thicker check */
+  transform: rotate(45deg) translate(0px, -1px);
+}
+
+/* Ensure disabled (read-only) checkboxes look good */
+.contentBody input[type="checkbox"]:disabled {
+  cursor: default;
+  opacity: 1;
+  /* Override default fade */
+  filter: none;
+}
+
+/* Slightly dim the unchecked disabled ones if needed, but keep checked bright */
+.contentBody input[type="checkbox"]:disabled:not(:checked) {
+  background-color: var(--muted);
+}
+
+/* Text Formatting */
+.contentBody strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.contentBody em {
+  font-style: italic;
+}
+
+.contentBody del {
+  text-decoration: line-through;
+  color: var(--muted-foreground);
+}
+
+.contentBody sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.contentBody sup {
+  vertical-align: super;
+  font-size: smaller;
 }

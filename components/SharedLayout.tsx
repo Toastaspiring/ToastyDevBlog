@@ -1,11 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getPosts } from "../endpoints/posts_GET.schema";
+import { POSTS_QUERY_KEY } from "../helpers/usePostsQuery";
+import { getEventsList } from "../endpoints/events/list_GET.schema";
 import { AnimatedBackground } from "./AnimatedBackground";
 import { CalendarDays, Code2, LogIn, LogOut, PlusCircle, User as UserIcon, Search } from "lucide-react";
 import { useAuth } from "../helpers/useAuth";
 import { ThemeModeSwitch } from "./ThemeModeSwitch";
 import { Button } from "./Button";
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +28,7 @@ export const SharedLayout: React.FC<{ children: React.ReactNode }> = ({
   const { authState, logout } = useAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = React.useState("");
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     await logout();
@@ -35,6 +40,46 @@ export const SharedLayout: React.FC<{ children: React.ReactNode }> = ({
     if (searchQuery.trim()) {
       navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
     }
+  };
+
+  const handleTitleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // 1. Cancel any ongoing refetches
+    await Promise.all([
+      queryClient.cancelQueries({ queryKey: POSTS_QUERY_KEY }),
+      queryClient.cancelQueries({ queryKey: ["events"] })
+    ]);
+
+    // 2. Clear data to trigger "isLoading" state (Skeletons)
+    queryClient.setQueryData(POSTS_QUERY_KEY, undefined);
+    queryClient.setQueryData(["events"], undefined);
+
+    // 3. Parallel Execution: Fetch Data AND Wait 2s minimum
+    // We fetch manually so we can hold the data until the timer is done
+    const postsPromise = getPosts();
+    const eventsPromise = getEventsList();
+    const delayPromise = new Promise(resolve => setTimeout(resolve, 2000));
+
+    try {
+      // 4. Wait for EVERYTHING to finish
+      const [postsData, eventsData] = await Promise.all([
+        postsPromise,
+        eventsPromise,
+        delayPromise
+      ]);
+
+      // 5. Update the cache with the fresh data
+      queryClient.setQueryData(POSTS_QUERY_KEY, postsData);
+      queryClient.setQueryData(["events"], eventsData);
+    } catch (error) {
+      console.error("Reload failed", error);
+      // If fail, invalidate to try again naturally or leave error state
+      queryClient.invalidateQueries({ queryKey: POSTS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    }
+
+    navigate("/");
   };
 
   const renderAuthControls = () => {
@@ -95,10 +140,10 @@ export const SharedLayout: React.FC<{ children: React.ReactNode }> = ({
       <AnimatedBackground />
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logoLink}>
+          <a href="/" onClick={handleTitleClick} className={styles.logoLink}>
             <Code2 size={28} className={styles.logoIcon} />
             <span className={styles.logoText}>ToastyDevBlog</span>
-          </Link>
+          </a>
           <div className={styles.actions}>
             <form onSubmit={handleSearch} className={styles.searchForm}>
               <div className={styles.searchInputWrapper}>

@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { Heart, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+import remarkMath from "remark-math";
+import remarkSupersub from "remark-supersub";
+import rehypeKatex from "rehype-katex";
+import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
+import "katex/dist/katex.min.css"; // Math CSS
+import "highlight.js/styles/github-dark.css"; // Code block CSS
 import { PostWithCounts } from "../endpoints/posts_GET.schema";
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
 import { Button } from "./Button";
@@ -30,8 +38,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
 
   const fallback = post.author.displayName?.charAt(0).toUpperCase() || "?";
 
-  // "Long Post" threshold
-  const isLongPost = post.content.length > 300;
+  // Determine if post is long based on actual height
+  const [isLongPost, setIsLongPost] = useState(false);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (contentRef.current) {
+      // 250px matches the max-height in CSS
+      setIsLongPost(contentRef.current.scrollHeight > 250);
+    }
+  }, [post.content]);
 
   const toggleExpand = () => {
     if (isLongPost) {
@@ -39,20 +55,44 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
     }
   };
 
+  // Optimistic Like State
+  const [isLiked, setIsLiked] = useState(post.isLiked);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Sync state if prop changes (rare, but good for consistency)
+  React.useEffect(() => {
+    setIsLiked(post.isLiked);
+    setLikeCount(post.likeCount);
+  }, [post.isLiked, post.likeCount]);
+
   // Like Mutation
   const likeMutation = useMutation({
     mutationFn: () => postPostLike({ postId: post.id }),
     onSuccess: () => {
-      // Invalidate posts query to refresh like count and status
-      // Ideally we'd update optimistically, but invalidation is safer for now.
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // We don't invalidate immediately to avoid "reloading" flicker.
+      // The local state is already correct.
+      // Ideally we would invalidate after a long delay or on page focus.
     },
     onError: (error) => {
       console.error("PostCard: Like mutation error", error);
+      // Revert optimistic update
+      setIsLiked(!isLiked);
+      setLikeCount(isLiked ? likeCount + 1 : likeCount - 1);
     }
   });
 
   const handleLike = () => {
+    // 1. Optimistic Update
+    const newIsLiked = !isLiked;
+    setIsLiked(newIsLiked);
+    setLikeCount(newIsLiked ? likeCount + 1 : likeCount - 1);
+
+    // 2. Trigger Animation
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 400); // 400ms match css animation duration
+
+    // 3. Fire mutation
     likeMutation.mutate();
   };
 
@@ -73,9 +113,24 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           </h2>
         </div>
 
-        <div className={styles.contentBody} data-expanded={isExpanded || !isLongPost}>
+        <div
+          className={styles.contentBody}
+          data-expanded={isExpanded || !isLongPost}
+          ref={contentRef}
+          style={{
+            maxHeight: isExpanded && contentRef.current
+              ? `${contentRef.current.scrollHeight}px`
+              : undefined
+          }}
+        >
           <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[
+              [remarkGfm, { singleTilde: false }],
+              remarkBreaks,
+              remarkMath,
+              remarkSupersub
+            ]}
+            rehypePlugins={[rehypeKatex, rehypeHighlight, rehypeRaw]}
             components={{
               img: ({ node, ...props }) => (
                 <div className={styles.imageContainer}>
@@ -138,7 +193,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              color: post.isLiked ? '#ef4444' : 'inherit', // Red if liked
+              color: isLiked ? '#ef4444' : 'inherit', // Red if liked
               display: 'flex',
               alignItems: 'center',
               gap: '0.25rem'
@@ -146,10 +201,10 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           >
             <Heart
               size={16}
-              className={likeMutation.isPending ? "animate-pulse" : ""}
-              fill={post.isLiked ? "#ef4444" : "none"} // Fill if liked
+              className={isAnimating ? styles.bounce : ""}
+              fill={isLiked ? "#ef4444" : "none"} // Fill if liked
             />
-            <span>{post.likeCount}</span>
+            <span>{likeCount}</span>
           </button>
           <button
             className={styles.statItem}
@@ -170,13 +225,18 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
         </div>
       </footer>
 
-      {/* Inline Comments - Visible on All Screens when active */}
-      {isActive && (
-        <div className={styles.inlineComments}>
-          <div className={styles.inlineCommentsDivider} />
-          <PostComments postSlug={post.slug} postId={post.id} />
+      {/* Inline Comments - Always rendered but animated */}
+      <div
+        className={styles.inlineCommentsWrapper}
+        data-active={isActive}
+      >
+        <div className={styles.inlineCommentsInner}>
+          <div className={styles.inlineComments}>
+            <div className={styles.inlineCommentsDivider} />
+            <PostComments postSlug={post.slug} postId={post.id} enabled={isActive} />
+          </div>
         </div>
-      )}
+      </div>
     </article>
   );
 };

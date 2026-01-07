@@ -8,6 +8,19 @@ import "easymde/dist/easymde.min.css";
 import { toast } from "sonner";
 import { Save, Loader2, Image, Video } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import ReactDOMServer from "react-dom/server";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+import remarkMath from "remark-math";
+import remarkSupersub from "remark-supersub";
+import rehypeKatex from "rehype-katex";
+import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
+import "katex/dist/katex.min.css"; // Math CSS
+import "highlight.js/styles/github-dark.css"; // Code block CSS
+// Reuse PostCard styles for preview consistency (or subset)
+import postStyles from "../components/PostCard.module.css";
 
 import {
     schema as updatePostSchema,
@@ -98,6 +111,23 @@ const EditPostPage: React.FC = () => {
                 "link", "image", "|", "preview", "side-by-side", "fullscreen", "|", "guide",
             ] as any,
             status: false,
+            previewRender: (plainText: string) => {
+                return ReactDOMServer.renderToString(
+                    <div className={postStyles.contentBody}>
+                        <ReactMarkdown
+                            remarkPlugins={[
+                                [remarkGfm, { singleTilde: false }],
+                                remarkBreaks,
+                                remarkMath,
+                                remarkSupersub
+                            ]}
+                            rehypePlugins={[rehypeKatex, rehypeHighlight, rehypeRaw]}
+                        >
+                            {plainText}
+                        </ReactMarkdown>
+                    </div>
+                );
+            },
         }),
         []
     );

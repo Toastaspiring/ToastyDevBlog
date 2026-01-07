@@ -5,11 +5,23 @@
 
 .themeButton {
   position: relative;
-  transition: transform var(--animation-duration-normal) ease;
+  transition: transform var(--animation-duration-normal) ease, border-color 0.2s ease;
+  border: 1px solid transparent;
+  /* Prepare for border transition */
 }
 
+/* "instead of blue fill, make blue border" -> For the NAVBAR button: "make it a white border appearing ( fade in / fade out ) on hover" 
+   And "I don't want the blue border around the icon" in normal state.
+   "change the border color of white theme button to white" -> adaptive to foreground.
+*/
 .themeButton:hover {
   transform: scale(1.05);
+  background-color: transparent !important;
+  /* No fill */
+  border-color: var(--foreground) !important;
+  /* White border (in dark) / Black (in light) */
+  /* If default button has a ring or outline on hover/focus, we might need to suppress it, 
+     but :hover usually implies mouse. */
 }
 
 .icon {
@@ -35,4 +47,52 @@
 /* Dark mode adjustments */
 :global(.dark) .icon {
   color: var(--foreground);
+}
+
+.themeOption {
+  border: 1px solid transparent;
+  /* Prepare for border transition */
+  background-color: transparent !important;
+  /* Override default dropdown hover bg */
+  transition: border-color 0.3s ease, color 0.3s ease;
+  /* Fade in/out */
+  /* Ensure padding matches default item if needed, but border might shift layout slightly unless we assume border-box */
+  box-sizing: border-box;
+  /* Prevent layout shift by having transparent border always */
+  outline: none !important;
+  /* Prevent focus outline causing "black border" issues */
+}
+
+/* Light Option */
+.lightOption {
+  composes: themeOption;
+}
+
+.lightOption:hover {
+  background-color: transparent !important;
+  /* "change the border color of white theme button to white" */
+  /* If in dark mode, light option text is white, border should be white. */
+  border-color: var(--foreground) !important;
+}
+
+/* For specific color requested: "white border" */
+:global(.dark) .lightOption:hover {
+  border-color: #ffffff;
+}
+
+:global(:root:not(.dark)) .lightOption:hover {
+  /* If in light mode, hovering light option might need to be dark border? */
+  border-color: #000000;
+}
+
+/* Dark Option */
+.darkOption {
+  composes: themeOption;
+}
+
+.darkOption:hover {
+  border-color: var(--primary) !important;
+  /* Blue */
+  background-color: transparent !important;
+  color: var(--primary);
 }
