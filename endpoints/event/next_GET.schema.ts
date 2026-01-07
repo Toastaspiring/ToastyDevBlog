@@ -8,18 +8,20 @@ export const schema = z.object({});
 
 export type OutputType =
   | (Pick<
-      Selectable<Events>,
-      "id" | "title" | "description" | "eventDate" | "createdAt"
-    > & {
-      creatorDisplayName: Selectable<Users>["displayName"];
-      creatorAvatarUrl: Selectable<Users>["avatarUrl"];
-    })
+    Selectable<Events>,
+    "id" | "title" | "description" | "eventDate" | "createdAt"
+  > & {
+    creatorDisplayName: Selectable<Users>["displayName"];
+    creatorAvatarUrl: Selectable<Users>["avatarUrl"];
+  })
   | null;
 
-export const getEventNext = async (
+import { API_URL } from "../../helpers/api";
+
+export const getNextEvent = async (
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`/_api/event/next`, {
+  const result = await fetch(`${API_URL}/_api/event/next`, {
     method: "GET",
     ...init,
     headers: {

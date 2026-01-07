@@ -19,11 +19,13 @@ export type UserCreatedPost = {
 
 export type OutputType = UserCreatedPost[];
 
+import { API_URL } from "../../helpers/api";
+
 export const getUserCreatedPosts = async (
   body?: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`/_api/user/created-posts`, {
+  const result = await fetch(`${API_URL}/_api/user/created-posts`, {
     method: "GET",
     ...init,
     headers: {

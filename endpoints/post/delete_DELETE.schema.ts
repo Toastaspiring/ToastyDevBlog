@@ -11,11 +11,13 @@ export type OutputType = { success: boolean };
 
 import superjson from "superjson";
 
+import { API_URL } from "../../helpers/api";
+
 export const deletePost = async (
     body: z.infer<typeof schema>,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`/_api/post/delete`, {
+    const result = await fetch(`${API_URL}/_api/post/delete`, {
         method: "DELETE",
         body: superjson.stringify(body),
         ...init,

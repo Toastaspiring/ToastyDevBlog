@@ -14,8 +14,10 @@ export type OutputType = (Pick<
   creatorAvatarUrl: Selectable<Users>["avatarUrl"];
 })[];
 
+import { API_URL } from "../../helpers/api";
+
 export const getEventsList = async (init?: RequestInit): Promise<OutputType> => {
-  const result = await fetch(`/_api/events/list`, {
+  const result = await fetch(`${API_URL}/_api/events/list`, {
     method: "GET",
     ...init,
     headers: {

@@ -15,11 +15,13 @@ export type OutputType = { success: boolean };
 
 import superjson from "superjson";
 
+import { API_URL } from "../../helpers/api";
+
 export const updatePost = async (
     body: z.infer<typeof schema>,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`/_api/post/update`, {
+    const result = await fetch(`${API_URL}/_api/post/update`, {
         method: "PUT",
         body: superjson.stringify(body),
         ...init,

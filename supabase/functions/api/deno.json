@@ -1,0 +1,12 @@
+{
+    "imports": {
+        "hono": "jsr:@hono/hono@^4.6.1",
+        "postgres": "https://deno.land/x/postgresjs@v3.4.4/mod.js",
+        "kysely": "npm:kysely@0.27.3",
+        "kysely-postgres-js": "npm:kysely-postgres-js@2.0.0",
+        "jose": "https://deno.land/x/jose@v5.9.6/index.ts",
+        "superjson": "npm:superjson@2.2.2",
+        "zod": "npm:zod@3.22.4",
+        "bcryptjs": "npm:bcryptjs@2.4.3"
+    }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { HashRouter, Routes, Route, Outlet } from "react-router-dom";
 import { GlobalContextProviders } from "./components/_globalContextProviders";
 import Page_0 from "./pages/login.tsx";
 import PageLayout_0 from "./pages/login.pageLayout.tsx";
@@ -117,7 +117,7 @@ function NotFound() {
 
 export function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <GlobalContextProviders>
         <Routes>
           {toElement({
@@ -136,6 +136,6 @@ export function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </GlobalContextProviders>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

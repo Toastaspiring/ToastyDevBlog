@@ -20,19 +20,22 @@ export type InputType = z.infer<typeof schema>;
 
 export type OutputType = Selectable<BlogPosts>;
 
-export const postPostCreate = async (
+import { API_URL } from "../../helpers/api";
+
+export const createPost = async (
   body: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`/_api/post/create`, {
+  const result = await fetch(`${API_URL}/_api/post/create`, {
     method: "POST",
-    body: superjson.stringify(validatedInput),
+    body: JSON.stringify(validatedInput),
     ...init,
     headers: {
       "Content-Type": "application/json",
       ...(init?.headers ?? {}),
     },
+    credentials: "include",
   });
   if (!result.ok) {
     const errorObject = superjson.parse<{ error: string }>(
