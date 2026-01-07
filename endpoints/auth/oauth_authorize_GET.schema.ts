@@ -18,7 +18,7 @@ export const getAuthOauthAuthorize = async (
 ): Promise<void> => {
   const validatedInput = schema.parse(params);
 
-  const url = new URL(`/_api/auth/oauth_authorize`);
+  const url = new URL(`/auth/oauth_authorize`);
   url.searchParams.set("provider", validatedInput.provider);
 
   const result = await fetch(url.toString(), {

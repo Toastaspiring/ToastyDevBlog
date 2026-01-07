@@ -25,7 +25,7 @@ export const getUserById = async (
     id: number,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`${API_URL}/_api/users/${id}`, {
+    const result = await fetch(`${API_URL}/users/${id}`, {
         method: "GET",
         ...init,
         headers: {

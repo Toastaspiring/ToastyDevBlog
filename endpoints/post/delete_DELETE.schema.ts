@@ -17,7 +17,7 @@ export const deletePost = async (
     body: z.infer<typeof schema>,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`${API_URL}/_api/post/delete`, {
+    const result = await fetch(`${API_URL}/post/delete`, {
         method: "DELETE",
         body: superjson.stringify(body),
         ...init,

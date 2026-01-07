@@ -27,7 +27,7 @@ export const postPostCreate = async (
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`${API_URL}/_api/post/create`, {
+  const result = await fetch(`${API_URL}/post/create`, {
     method: "POST",
     body: JSON.stringify(validatedInput),
     ...init,

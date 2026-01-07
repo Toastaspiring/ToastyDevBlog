@@ -21,7 +21,7 @@ export const updatePost = async (
     body: z.infer<typeof schema>,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`${API_URL}/_api/post/update`, {
+    const result = await fetch(`${API_URL}/post/update`, {
         method: "PUT",
         body: superjson.stringify(body),
         ...init,

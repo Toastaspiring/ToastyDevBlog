@@ -44,7 +44,7 @@ export const getPostBySlug = async (
     slug: string,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`${API_URL}/_api/post/by-slug/${slug}`, {
+    const result = await fetch(`${API_URL}/post/by-slug/${slug}`, {
         method: "GET",
         ...init,
         headers: {

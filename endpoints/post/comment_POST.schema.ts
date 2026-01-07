@@ -31,7 +31,7 @@ export const postPostComment = async (
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`${API_URL}/_api/post/comment`, {
+  const result = await fetch(`${API_URL}/post/comment`, {
     method: "POST",
     body: superjson.stringify(validatedInput),
     ...init,

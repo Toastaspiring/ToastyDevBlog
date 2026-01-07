@@ -25,7 +25,7 @@ export const getUserCreatedPosts = async (
   body?: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`${API_URL}/_api/user/created-posts`, {
+  const result = await fetch(`${API_URL}/user/created-posts`, {
     method: "GET",
     ...init,
     headers: {

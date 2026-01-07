@@ -40,7 +40,7 @@ export const getPosts = async (
   const queryParams = new URLSearchParams();
   if (body?.mode) queryParams.set("mode", body.mode);
 
-  const result = await fetch(`${API_URL}/_api/posts?${queryParams.toString()}`, {
+  const result = await fetch(`${API_URL}/posts?${queryParams.toString()}`, {
     method: "GET",
     ...init,
     headers: {

@@ -2,7 +2,7 @@
 import { db } from "../../db.ts";
 import { sql } from "kysely";
 import { schema } from "./login_with_password_POST.schema.ts";
-import { compare } from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 import {
     setServerSession,
     SessionExpirationSeconds,
@@ -125,7 +125,7 @@ export async function handle(request: Request) {
             const user = userResults[0];
 
             // Verify password
-            const passwordValid = await compare(password, user.passwordHash);
+            const passwordValid = await bcrypt.compare(password, user.passwordHash);
             if (!passwordValid) {
                 // Log failed attempt for invalid password
                 await trx

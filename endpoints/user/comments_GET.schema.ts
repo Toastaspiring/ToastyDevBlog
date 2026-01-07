@@ -24,7 +24,7 @@ export const getUserComments = async (
   init?: RequestInit
 ): Promise<OutputType> => {
   const query = params?.userId ? `?userId=${params.userId}` : '';
-  const result = await fetch(`${API_URL}/_api/user/comments${query}`, {
+  const result = await fetch(`${API_URL}/user/comments${query}`, {
     method: "GET",
     ...init,
     headers: {

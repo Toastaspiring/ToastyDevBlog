@@ -21,7 +21,7 @@ import { API_URL } from "../../helpers/api";
 export const getEventNext = async (
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`${API_URL}/_api/event/next`, {
+  const result = await fetch(`${API_URL}/event/next`, {
     method: "GET",
     ...init,
     headers: {

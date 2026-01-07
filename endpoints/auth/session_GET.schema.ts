@@ -20,7 +20,7 @@ export const getSession = async (
   body: z.infer<typeof schema> = {},
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`${API_URL}/_api/auth/session`, {
+  const result = await fetch(`${API_URL}/auth/session`, {
     method: "GET",
     ...init,
     headers: {

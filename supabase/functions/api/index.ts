@@ -26,13 +26,19 @@ import { handle as handleUserLikedPosts } from './endpoints/user/liked-posts_GET
 
 
 
-const app = new Hono()
+const app = new Hono().basePath('/functions/v1/api')
+
+// Log every request path for debugging
+app.use('*', async (c, next) => {
+    console.log(`[${c.req.method}] Path: ${c.req.path} | URL: ${c.req.url}`)
+    await next()
+})
 
 app.use(
-    '/*',
+    '*',
     cors({
         origin: (origin) => {
-            if (!origin) return 'https://toastaspiring.github.io'; // Default or allow non-browser requests
+            if (!origin) return 'https://toastaspiring.github.io';
             const allowedOrigins = [
                 'https://toastaspiring.github.io',
                 'http://localhost:5173',
@@ -41,7 +47,7 @@ app.use(
             if (allowedOrigins.includes(origin) || origin.endsWith('.github.io')) {
                 return origin;
             }
-            return 'https://toastaspiring.github.io'; // Fallback
+            return 'https://toastaspiring.github.io';
         },
         allowHeaders: ['Content-Type', 'Authorization', 'Upgrade-Insecure-Requests', 'apikey', 'X-Client-Info', 'X-Requested-With'],
         allowMethods: ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE'],
@@ -52,8 +58,19 @@ app.use(
 )
 
 // Explicit OPTIONS handler for preflight checks
-app.options('/*', (c) => {
-    return c.text('', 204)
+app.options('*', (c) => {
+    return c.body(null, 204)
+})
+
+// Debug 404 handler
+app.notFound((c) => {
+    return c.json({
+        error: 'Not Found',
+        message: 'Route not found',
+        path: c.req.path,
+        url: c.req.url,
+        method: c.req.method,
+    }, 404)
 })
 
 app.get('/', (c) => {
@@ -61,78 +78,78 @@ app.get('/', (c) => {
 })
 
 // Posts Route
-app.get('/_api/posts', async (c) => {
+app.get('/posts', async (c) => {
     const response = await handlePostsGet(c.req.raw)
     return response
 })
 
-app.get('/_api/post/by-slug/:slug', async (c) => {
+app.get('/post/by-slug/:slug', async (c) => {
     const response = await handleSlugGet(c.req.raw)
     return response
 })
 
-app.post('/_api/post/create', async (c) => {
+app.post('/post/create', async (c) => {
     const response = await handleCreatePost(c.req.raw)
     return response
 })
 
-app.put('/_api/post/update', async (c) => {
+app.put('/post/update', async (c) => {
     const response = await handleUpdatePost(c.req.raw)
     return response
 })
 
-app.delete('/_api/post/delete', async (c) => {
+app.delete('/post/delete', async (c) => {
     const response = await handleDeletePost(c.req.raw)
     return response
 })
 
-app.post('/_api/post/like', async (c) => {
+app.post('/post/like', async (c) => {
     const response = await handleLikePost(c.req.raw)
     return response
 })
 
-app.post('/_api/post/comment', async (c) => {
+app.post('/post/comment', async (c) => {
     const response = await handleCommentPost(c.req.raw)
     return response
 })
 
-app.post('/_api/event/create', async (c) => {
+app.post('/event/create', async (c) => {
     const response = await handleEventCreate(c.req.raw)
     return response
 })
 
-app.get('/_api/event/next', async (c) => {
+app.get('/event/next', async (c) => {
     const response = await handleEventNext(c.req.raw)
     return response
 })
 
-app.get('/_api/events/list', async (c) => {
+app.get('/events/list', async (c) => {
     const response = await handleEventsList(c.req.raw)
     return response
 })
 
 // User Routes
-app.get('/_api/users/search', async (c) => {
+app.get('/users/search', async (c) => {
     const response = await handleUserSearch(c.req.raw)
     return response
 })
 
-app.get('/_api/users/:id', async (c) => {
+app.get('/users/:id', async (c) => {
     const response = await handleUserId(c.req.raw)
     return response
 })
 
-app.get('/_api/user/comments', async (c) => {
+app.get('/user/comments', async (c) => {
     const response = await handleUserComments(c.req.raw)
     return response
 })
 
-app.get('/_api/user/created-posts', async (c) => {
+app.get('/user/created-posts', async (c) => {
     const response = await handleUserCreatedPosts(c.req.raw)
     return response
 })
 
-app.get('/_api/user/liked-posts', async (c) => {
+app.get('/user/liked-posts', async (c) => {
     const response = await handleUserLikedPosts(c.req.raw)
     return response
 })
@@ -142,17 +159,17 @@ app.get('/_api/user/liked-posts', async (c) => {
 
 
 
-app.get('/_api/auth/session', async (c) => {
+app.get('/auth/session', async (c) => {
     const response = await handleSessionGet(c.req.raw)
     return response
 })
 
-app.post('/_api/auth/login_with_password', async (c) => {
+app.post('/auth/login_with_password', async (c) => {
     const response = await handleLoginPost(c.req.raw)
     return response
 })
 
-app.post('/_api/auth/register_with_password', async (c) => {
+app.post('/auth/register_with_password', async (c) => {
     const response = await handleRegisterPost(c.req.raw)
     return response
 })

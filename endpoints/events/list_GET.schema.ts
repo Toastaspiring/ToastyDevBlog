@@ -17,7 +17,7 @@ export type OutputType = (Pick<
 import { API_URL } from "../../helpers/api";
 
 export const getEventsList = async (init?: RequestInit): Promise<OutputType> => {
-  const result = await fetch(`${API_URL}/_api/events/list`, {
+  const result = await fetch(`${API_URL}/events/list`, {
     method: "GET",
     ...init,
     headers: {

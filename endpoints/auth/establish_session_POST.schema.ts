@@ -8,25 +8,25 @@ export type InputType = z.infer<typeof schema>;
 
 export type OutputType =
   | {
-      user: {
-        id: number;
-        email: string;
-        displayName: string;
-        avatarUrl: string | null;
-        role: "admin" | "user";
-      };
-      success: boolean;
-    }
-  | {
-      error: string;
+    user: {
+      id: number;
+      email: string;
+      displayName: string;
+      avatarUrl: string | null;
+      role: "admin" | "user";
     };
+    success: boolean;
+  }
+  | {
+    error: string;
+  };
 
 export const postEstablishSession = async (
   body: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`/_api/auth/establish_session`, {
+  const result = await fetch(`/auth/establish_session`, {
     method: "POST",
     body: JSON.stringify(validatedInput),
     ...init,

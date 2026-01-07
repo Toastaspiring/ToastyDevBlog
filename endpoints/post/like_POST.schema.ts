@@ -18,7 +18,7 @@ export const postPostLike = async (
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`${API_URL}/_api/post/like`, {
+  const result = await fetch(`${API_URL}/post/like`, {
     method: "POST",
     body: superjson.stringify(validatedInput),
     ...init,

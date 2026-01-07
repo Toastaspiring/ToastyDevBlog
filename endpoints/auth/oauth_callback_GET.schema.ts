@@ -25,7 +25,7 @@ export const getAuthOauthCallback = async (
   });
 
   const result = await fetch(
-    `/_api/auth/oauth_callback?${searchParams.toString()}`,
+    `/auth/oauth_callback?${searchParams.toString()}`,
     {
       method: "GET",
       redirect: "manual", // Handle redirects manually
