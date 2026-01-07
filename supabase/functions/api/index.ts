@@ -28,7 +28,33 @@ import { handle as handleUserLikedPosts } from './endpoints/user/liked-posts_GET
 
 const app = new Hono()
 
-app.use('/*', cors())
+app.use(
+    '/*',
+    cors({
+        origin: (origin) => {
+            if (!origin) return 'https://toastaspiring.github.io'; // Default or allow non-browser requests
+            const allowedOrigins = [
+                'https://toastaspiring.github.io',
+                'http://localhost:5173',
+                'http://localhost:4173'
+            ];
+            if (allowedOrigins.includes(origin) || origin.endsWith('.github.io')) {
+                return origin;
+            }
+            return 'https://toastaspiring.github.io'; // Fallback
+        },
+        allowHeaders: ['Content-Type', 'Authorization', 'Upgrade-Insecure-Requests', 'apikey', 'X-Client-Info', 'X-Requested-With'],
+        allowMethods: ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE'],
+        exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+        maxAge: 600,
+        credentials: true,
+    })
+)
+
+// Explicit OPTIONS handler for preflight checks
+app.options('/*', (c) => {
+    return c.text('', 204)
+})
 
 app.get('/', (c) => {
     return c.text('ToastyDevBlog API is running on Supabase Edge Functions!')
