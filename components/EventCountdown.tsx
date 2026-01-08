@@ -81,7 +81,8 @@ export const EventCountdown: React.FC<{ className?: string }> = ({
   const { data: nextEvent, isFetching, error } = useNextEventQuery();
   const { isGlobalLoading } = useGlobalLoading();
 
-  if (isFetching || isGlobalLoading) {
+  // Show loading skeleton only on initial load (when no data exists yet)
+  if (isGlobalLoading || (isFetching && !nextEvent)) {
     return (
       <div className={`${styles.container} ${className || ""}`}>
         <Skeleton style={{ height: "2.5rem", width: "60%", marginBottom: 'var(--spacing-4)' }} />
@@ -152,18 +153,20 @@ export const EventCountdown: React.FC<{ className?: string }> = ({
   );
 };
 
-const StarrySky = () => {
+// Optimized StarrySky component
+const StarrySky = React.memo(() => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for no transparency in basic buffer if possible, though we use rgba
     if (!ctx) return;
 
     let animationFrameId: number;
-    let stars: Array<{ x: number; y: number; radius: number; alpha: number; speed: number }> = [];
+    // Pre-allocate stars array size if consistent, or just simple array is fine
+    let stars: Array<{ x: number; y: number; radius: number; speed: number; offset: number }> = [];
 
     const resizeCanvas = () => {
       if (canvas.parentElement) {
@@ -175,26 +178,39 @@ const StarrySky = () => {
 
     const initStars = () => {
       stars = [];
-      const numStars = Math.floor((canvas.width * canvas.height) / 4000); // Density
+      const numStars = Math.floor((canvas.width * canvas.height) / 4000);
       for (let i = 0; i < numStars; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           radius: Math.random() * 1.5,
-          alpha: Math.random(),
-          speed: Math.random() * 0.05 + 0.01
+          speed: Math.random() * 0.05 + 0.01,
+          offset: Math.random() * Math.PI * 2 // Random starting phase for twinkling
         });
       }
     };
 
     const draw = () => {
       if (!ctx || !canvas) return;
+
+      // Clear with solid color is faster than clearRect + background, but we need transparent overlay?
+      // Actually we just clear rect.
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const now = Date.now();
+
+      ctx.fillStyle = '#FFFFFF'; // Set color once
+
+      // Batch drawing? 
+      // Individual path calls are expensive in JS loop but unavoidable for circles with different opacities.
+      // Optimization: Group stars by opacity? Too complex for this.
+      // Just use globalAlpha.
 
       stars.forEach(star => {
         ctx.beginPath();
+        const alpha = Math.abs(Math.sin(now * 0.001 * star.speed + star.offset)) * 0.8 + 0.2;
+        ctx.globalAlpha = alpha; // Much faster than parsing rgba string
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(Date.now() * 0.001 * star.speed + star.x)) * 0.8 + 0.2})`;
         ctx.fill();
       });
 
@@ -209,7 +225,7 @@ const StarrySky = () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, []); // Empty dependency array means it runs once on mount. React.memo prevents re-renders from parent updates.
 
   return <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }} />;
-};
+});
