@@ -15,7 +15,7 @@ jobs:
       - name: Check API Health
         run: |
           echo "Checking API health..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://toastydevblog.xyz/_api/posts)
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/_api/posts)
           if [ $response -eq 200 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
@@ -26,7 +26,7 @@ jobs:
       - name: Check Database Connection
         run: |
           echo "Checking database connection via API..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://toastydevblog.xyz/_api/posts)
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/_api/posts)
           if [ $response -eq 200 ]; then
             echo "✅ Database connection is healthy"
           else
@@ -37,7 +37,7 @@ jobs:
       - name: Check Frontend
         run: |
           echo "Checking frontend..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://toastydevblog.xyz/)
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/)
           if [ $response -eq 200 ]; then
             echo "✅ Frontend is healthy (HTTP $response)"
           else
