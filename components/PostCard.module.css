@@ -100,6 +100,22 @@
   transition: max-height 0.3s ease-out;
 }
 
+.contentBody p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.contentBody h1,
+.contentBody h2,
+.contentBody h3,
+.contentBody h4,
+.contentBody h5,
+.contentBody h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
 .contentBody[data-expanded="false"] {
   max-height: 250px;
   overflow: hidden;
