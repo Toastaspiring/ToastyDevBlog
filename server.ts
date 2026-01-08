@@ -175,7 +175,7 @@ app.post('/_api/event/create', async c => {
 })
 app.put('/_api/event/update', async c => {
   try {
-    const { handle } = await import("./endpoints/event/update_PUT.js");
+    const { handle } = await import("./supabase/functions/api/endpoints/event/update_PUT.ts");
     let request = c.req.raw;
     const response = await handle(request);
     if (!(response instanceof Response) && response.constructor.name !== "Response") {

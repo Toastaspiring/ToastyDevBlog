@@ -17,7 +17,7 @@ const ITEM_HEIGHT = 32; // Sync with CSS
 export function WheelPicker<T>({ options, value, onChange, className, style, loop = false }: WheelPickerProps<T>) {
     const [emblaRef, emblaApi] = useEmblaCarousel({
         axis: "y",
-        dragFree: true, // Allow fling
+        dragFree: false,
         loop,
         skipSnaps: false,
         containScroll: false,

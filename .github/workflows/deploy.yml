@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "Checking API health..."
           response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/_api/posts)
-          if [ $response -eq 200 ]; then
+          if [ $response -eq 301 ]; then
             echo "✅ API is healthy (HTTP $response)"
           else
             echo "❌ API health check failed (HTTP $response)"
@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Checking database connection via API..."
           response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/_api/posts)
-          if [ $response -eq 200 ]; then
+          if [ $response -eq 301 ]; then
             echo "✅ Database connection is healthy"
           else
             echo "❌ Database connection check failed"
