@@ -114,9 +114,9 @@ export const PostComments: React.FC<PostCommentsProps> = ({ postSlug, postId, en
         const textBeforeCursor = commentContent.slice(0, cursorPosition);
         const textAfterCursor = commentContent.slice(cursorPosition);
 
-        // Replace the partial mention with the full user name
+        // Replace the partial mention with the full user name as a link
         const lastAtPos = textBeforeCursor.lastIndexOf('@');
-        const newTextBefore = textBeforeCursor.slice(0, lastAtPos) + `@${user.displayName} `;
+        const newTextBefore = textBeforeCursor.slice(0, lastAtPos) + `[@${user.displayName}](/users/${user.id}) `;
 
         const newContent = newTextBefore + textAfterCursor;
         setCommentContent(newContent);
