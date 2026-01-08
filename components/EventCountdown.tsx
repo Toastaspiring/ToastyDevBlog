@@ -161,7 +161,7 @@ const StarrySky = React.memo(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for no transparency in basic buffer if possible, though we use rgba
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let animationFrameId: number;
