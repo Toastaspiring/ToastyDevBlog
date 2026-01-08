@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, Calendar, Info, User, Trash2, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Calendar, Info, User, Trash2, CheckCircle2, Pencil } from "lucide-react";
 import { useEventsQuery } from "../helpers/useEventsQuery";
 import { useDeleteEventMutation } from "../helpers/useDeleteEventMutation";
 import { Skeleton } from "./Skeleton";
@@ -10,7 +10,7 @@ import { useAuth } from "../helpers/useAuth";
 
 type Event = EventsListType[0];
 
-const EventCard: React.FC<{ event: Event; isAdmin: boolean }> = ({ event, isAdmin }) => {
+const EventCard: React.FC<{ event: Event; isAdmin: boolean; onEdit?: (event: Event) => void }> = ({ event, isAdmin, onEdit }) => {
   const deleteEventMutation = useDeleteEventMutation();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -52,14 +52,24 @@ const EventCard: React.FC<{ event: Event; isAdmin: boolean }> = ({ event, isAdmi
       <div className={styles.cardHeader}>
         <h3 className={styles.cardTitle}>{event.title}</h3>
         {isAdmin && (
-          <button
-            className={styles.deleteButton}
-            onClick={handleDelete}
-            disabled={deleteEventMutation.isPending || isDeleting}
-            aria-label="Delete event"
-          >
-            <Trash2 size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              className={styles.deleteButton} // Reuse styles or add new one
+              onClick={() => onEdit && onEdit(event)}
+              aria-label="Edit event"
+              style={{ color: 'var(--blue-500)' }} // Distinct color
+            >
+              <Pencil size={16} />
+            </button>
+            <button
+              className={styles.deleteButton}
+              onClick={handleDelete}
+              disabled={deleteEventMutation.isPending || isDeleting}
+              aria-label="Delete event"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         )}
       </div>
       {event.description && (
@@ -93,7 +103,7 @@ const EventCardSkeleton: React.FC = () => {
   );
 };
 
-export const UpcomingEventsList: React.FC = () => {
+export const UpcomingEventsList: React.FC<{ onEdit?: (event: Event) => void }> = ({ onEdit }) => {
   const { data: events, isFetching, error } = useEventsQuery();
   const { authState } = useAuth();
 
@@ -133,7 +143,7 @@ export const UpcomingEventsList: React.FC = () => {
   return (
     <div className={styles.listContainer}>
       {events.map((event) => (
-        <EventCard key={event.id} event={event} isAdmin={!!isAdmin} />
+        <EventCard key={event.id} event={event} isAdmin={!!isAdmin} onEdit={onEdit} />
       ))}
     </div>
   );

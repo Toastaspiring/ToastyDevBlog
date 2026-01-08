@@ -5,6 +5,8 @@ import { UpcomingEventsList } from "../components/UpcomingEventsList";
 import styles from "./admin.events.module.css";
 
 const AdminEventsPage: React.FC = () => {
+  const [selectedEvent, setSelectedEvent] = React.useState<any>(null); // Type 'any' for now, ideally 'Event'
+
   return (
     <>
       <Helmet>
@@ -21,11 +23,14 @@ const AdminEventsPage: React.FC = () => {
 
         <div className={styles.contentGrid}>
           <div className={styles.formSection}>
-            <EventManagement />
+            <EventManagement
+              selectedEvent={selectedEvent}
+              onClear={() => setSelectedEvent(null)}
+            />
           </div>
           <div className={styles.listSection}>
             <h2 className={styles.listTitle}>Upcoming Events</h2>
-            <UpcomingEventsList />
+            <UpcomingEventsList onEdit={(event) => setSelectedEvent(event)} />
           </div>
         </div>
       </main>
