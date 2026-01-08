@@ -14,8 +14,10 @@ import { Textarea } from "./Textarea";
 import { Button } from "./Button";
 import { DateTimePicker } from "./DateTimePicker";
 import { useCreateEventMutation } from "../helpers/useCreateEventMutation";
+import { useDeleteEventMutation } from "../helpers/useDeleteEventMutation";
+import { useEventsQuery } from "../helpers/useEventsQuery";
 import styles from "./EventManagement.module.css";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Trash2, Calendar, Clock } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -43,6 +45,8 @@ export const EventManagement: React.FC<{ className?: string }> = ({
   });
 
   const createEventMutation = useCreateEventMutation();
+  const deleteEventMutation = useDeleteEventMutation();
+  const { data: events, isLoading: eventsLoading } = useEventsQuery();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     createEventMutation.mutate(
@@ -139,6 +143,76 @@ export const EventManagement: React.FC<{ className?: string }> = ({
           </Button>
         </form>
       </Form>
+
+      {/* Existing Events List */}
+      <div className={styles.eventsSection}>
+        <h3 className={styles.subtitle}>Existing Events</h3>
+        {eventsLoading ? (
+          <p className={styles.loadingText}>Loading events...</p>
+        ) : events && events.length > 0 ? (
+          <div className={styles.eventsList}>
+            {events.map((event) => {
+              const eventDate = new Date(event.eventDate);
+              const isPast = eventDate < new Date();
+
+              return (
+                <div key={event.id} className={`${styles.eventCard} ${isPast ? styles.pastEvent : ''}`}>
+                  <div className={styles.eventInfo}>
+                    <h4 className={styles.eventTitle}>{event.title}</h4>
+                    {event.description && (
+                      <p className={styles.eventDescription}>{event.description}</p>
+                    )}
+                    <div className={styles.eventMeta}>
+                      <span className={styles.metaItem}>
+                        <Calendar size={14} />
+                        {eventDate.toLocaleDateString()}
+                      </span>
+                      <span className={styles.metaItem}>
+                        <Clock size={14} />
+                        {eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
+                        deleteEventMutation.mutate(
+                          { id: event.id },
+                          {
+                            onSuccess: () => {
+                              toast.success("Event Deleted", {
+                                description: "The event has been removed successfully.",
+                                icon: <CheckCircle2 size={20} />,
+                              });
+                            },
+                            onError: (error) => {
+                              const errorMessage =
+                                error instanceof Error
+                                  ? error.message
+                                  : "An unknown error occurred.";
+                              toast.error("Deletion Failed", {
+                                description: errorMessage,
+                                icon: <AlertCircle size={20} />,
+                              });
+                            },
+                          }
+                        );
+                      }
+                    }}
+                    disabled={deleteEventMutation.isPending}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className={styles.noEvents}>No events created yet.</p>
+        )}
+      </div>
     </div>
   );
 };
