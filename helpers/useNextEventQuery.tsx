@@ -7,7 +7,7 @@ export const useNextEventQuery = () => {
   return useQuery({
     queryKey: NEXT_EVENT_QUERY_KEY,
     queryFn: getEventNext,
-    // Refetch every 60 seconds to keep any countdowns or time-sensitive UI accurate
-    refetchInterval: 60 * 1000,
+    // Only refetch on user actions (mount, window focus, manual refetch)
+    // No automatic polling
   });
 };

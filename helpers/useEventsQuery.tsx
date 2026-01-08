@@ -7,7 +7,6 @@ export const useEventsQuery = () => {
   return useQuery({
     queryKey: EVENTS_LIST_QUERY_KEY,
     queryFn: getEventsList,
-    // Refetch every 60 seconds to keep the list of upcoming events fresh.
-    refetchInterval: 60 * 1000,
+    // Only refetch on user actions, not automatically
   });
 };
