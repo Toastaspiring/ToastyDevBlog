@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 import { format } from "date-fns";
 import { MessageSquare, Loader2, Send } from "lucide-react";
 
@@ -187,7 +188,13 @@ export const PostComments: React.FC<PostCommentsProps> = ({ postSlug, postId, en
                                     </span>
                                 </div>
                                 <div className={styles.commentText}>
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    import rehypeSanitize from "rehype-sanitize";
+
+                                    // ... in main component ...
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        rehypePlugins={[rehypeSanitize]}
+                                    >
                                         {comment.content}
                                     </ReactMarkdown>
                                 </div>
