@@ -11,6 +11,7 @@ import { handle as handleDeletePost } from './endpoints/post/delete_DELETE.ts'
 import { handle as handleLikePost } from './endpoints/post/like_POST.ts'
 import { handle as handleCommentPost } from './endpoints/post/comment_POST.ts'
 import { handle as handleEventCreate } from './endpoints/event/create_POST.ts'
+import { handle as handleEventDelete } from './endpoints/event/delete_DELETE.ts'
 import { handle as handleEventNext } from './endpoints/event/next_GET.ts'
 import { handle as handleEventsList } from './endpoints/events/list_GET.ts'
 import { handle as handleUserSearch } from './endpoints/user/search_GET.ts'
@@ -115,6 +116,11 @@ app.post('/post/comment', async (c) => {
 
 app.post('/event/create', async (c) => {
     const response = await handleEventCreate(c.req.raw)
+    return response
+})
+
+app.delete('/event/delete', async (c) => {
+    const response = await handleEventDelete(c.req.raw)
     return response
 })
 

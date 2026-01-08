@@ -7,7 +7,7 @@ export const deletePost = async (
     body: z.infer<typeof schema>,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`${API_URL}/post`, {
+    const result = await fetch(`${API_URL}/post/delete`, {
         method: "DELETE",
         body: superjson.stringify(body), // Keeping 'body' as 'validatedInput' is not defined in the current context
         credentials: "include",
