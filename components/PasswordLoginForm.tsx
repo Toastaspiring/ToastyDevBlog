@@ -15,8 +15,10 @@ import { Spinner } from "./Spinner";
 import styles from "./PasswordLoginForm.module.css";
 import {
   schema,
-  postLogin,
 } from "../endpoints/auth/login_with_password_POST.schema";
+import {
+  postLogin,
+} from "../endpoints/auth/login_with_password_POST.client";
 import { useAuth } from "../helpers/useAuth";
 
 export type LoginFormData = z.infer<typeof schema>;

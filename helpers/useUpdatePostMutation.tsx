@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { InputType, updatePost } from "../endpoints/post/update_PUT.schema";
+import { InputType } from "../endpoints/post/update_PUT.schema";
+import { updatePost } from "../endpoints/post/update_PUT.client";
 
 export const useUpdatePostMutation = () => {
     const queryClient = useQueryClient();

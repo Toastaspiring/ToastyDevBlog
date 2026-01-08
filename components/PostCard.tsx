@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { Heart, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -13,8 +15,9 @@ import "highlight.js/styles/github-dark.css"; // Code block CSS
 import { PostWithCounts } from "../endpoints/posts_GET.schema";
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
 import { Button } from "./Button";
-import { postPostLike } from "../endpoints/post/like_POST.schema"; // Import Like mutation function
+import { postPostLike } from "../endpoints/post/like_POST.client"; // Import Like mutation function
 import { useMutation, useQueryClient } from "@tanstack/react-query"; // Import Query tools
+import { useAuth } from "../helpers/useAuth";
 import styles from "./PostCard.module.css";
 
 import { PostComments } from "./PostComments"; // Import PostComments
@@ -24,11 +27,13 @@ interface PostCardProps {
   className?: string;
   onToggleComments: () => void;
   isActive?: boolean;
+  previewMode?: boolean; // New prop
 }
 
-export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleComments, isActive }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleComments, isActive, previewMode = false }) => {
+  const [isExpanded, setIsExpanded] = useState(previewMode); // Expanded by default in preview
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
@@ -49,8 +54,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
     }
   }, [post.content]);
 
+  // Force expansion in preview mode
+  React.useEffect(() => {
+    if (previewMode) setIsExpanded(true);
+  }, [previewMode]);
+
   const toggleExpand = () => {
-    if (isLongPost) {
+    if (isLongPost && !previewMode) {
       setIsExpanded(!isExpanded);
     }
   };
@@ -82,7 +92,21 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
     }
   });
 
+  const { authState } = useAuth();
+
   const handleLike = () => {
+    if (previewMode) return; // Disable in preview
+
+    if (authState.type !== "authenticated") {
+      toast.error("You must be logged in to like posts.", {
+        action: {
+          label: "Log in",
+          onClick: () => navigate("/login"),
+        },
+      });
+      return;
+    }
+
     // 1. Optimistic Update
     const newIsLiked = !isLiked;
     setIsLiked(newIsLiked);
@@ -107,7 +131,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           <h2
             className={styles.title}
             onClick={toggleExpand}
-            style={{ cursor: isLongPost ? 'pointer' : 'default', width: '100%' }}
+            style={{ cursor: isLongPost && !previewMode ? 'pointer' : 'default', width: '100%' }}
           >
             {post.title}
           </h2>
@@ -115,10 +139,10 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
 
         <div
           className={styles.contentBody}
-          data-expanded={isExpanded || !isLongPost}
+          data-expanded={isExpanded || !isLongPost || previewMode}
           ref={contentRef}
           style={{
-            maxHeight: isExpanded && contentRef.current
+            maxHeight: (isExpanded || previewMode) && contentRef.current
               ? `${contentRef.current.scrollHeight}px`
               : undefined
           }}
@@ -144,7 +168,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           </ReactMarkdown>
         </div>
 
-        {isLongPost && (
+        {isLongPost && !previewMode && (
           <div className={styles.expandAction}>
             <Button
               variant="ghost"
@@ -188,15 +212,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           <button
             className={styles.statItem}
             onClick={handleLike}
-            disabled={likeMutation.isPending}
+            disabled={likeMutation.isPending || previewMode}
             style={{
               background: 'none',
               border: 'none',
-              cursor: 'pointer',
+              cursor: previewMode ? 'default' : 'pointer',
               color: isLiked ? '#ef4444' : 'inherit', // Red if liked
               display: 'flex',
               alignItems: 'center',
-              gap: '0.25rem'
+              gap: '0.25rem',
+              opacity: previewMode ? 0.7 : 1
             }}
           >
             <Heart
@@ -208,15 +233,17 @@ export const PostCard: React.FC<PostCardProps> = ({ post, className, onToggleCom
           </button>
           <button
             className={styles.statItem}
-            onClick={onToggleComments}
+            onClick={previewMode ? undefined : onToggleComments}
+            disabled={previewMode}
             style={{
               background: 'none',
               border: 'none',
-              cursor: 'pointer',
+              cursor: previewMode ? 'default' : 'pointer',
               color: isActive ? '#3b82f6' : 'inherit', // Blue if active
               display: 'flex',
               alignItems: 'center',
-              gap: '0.25rem'
+              gap: '0.25rem',
+              opacity: previewMode ? 0.7 : 1
             }}
           >
             <MessageSquare size={16} />

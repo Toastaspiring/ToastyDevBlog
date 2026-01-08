@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  postPostComment,
-  InputType,
-} from "../endpoints/post/comment_POST.schema";
+import { InputType, schema as commentSchema } from "../endpoints/post/comment_POST.schema";
+import { postPostComment } from "../endpoints/post/comment_POST.client";
 import { POSTS_QUERY_KEY } from "./usePostsQuery";
 
 export const useCreateCommentMutation = (slug?: string) => {

@@ -1,5 +1,7 @@
 export type ThemeMode = "light" | "dark" | "auto";
 
+const THEME_KEY = "toasty_theme";
+
 /**
  * Switch to dark mode by adding the "dark" class to document.body.
  */
@@ -10,6 +12,7 @@ export function switchToDarkMode(): void {
     currentMediaQuery = null;
   }
   document.body.classList.add("dark");
+  localStorage.setItem(THEME_KEY, "dark");
 }
 
 /**
@@ -22,6 +25,7 @@ export function switchToLightMode(): void {
     currentMediaQuery = null;
   }
   document.body.classList.remove("dark");
+  localStorage.setItem(THEME_KEY, "light");
 }
 
 function updateTheme(darkPreferred: boolean): void {
@@ -49,6 +53,22 @@ export function switchToAutoMode(): void {
   };
   currentMediaQuery = mediaQuery;
   updateTheme(mediaQuery.matches);
+  localStorage.removeItem(THEME_KEY);
+}
+
+/**
+ * Initializes the theme based on local storage or defaults to DARK.
+ */
+export function loadTheme(): void {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme === "light") {
+    switchToLightMode();
+  } else if (savedTheme === "dark") {
+    switchToDarkMode();
+  } else {
+    // Default to Dark if nothing is saved
+    switchToDarkMode();
+  }
 }
 
 /**

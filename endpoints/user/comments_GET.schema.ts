@@ -17,26 +17,3 @@ export type UserComment = {
 
 export type OutputType = UserComment[];
 
-import { API_URL } from "../../helpers/api";
-
-export const getUserComments = async (
-  params?: { userId?: number },
-  init?: RequestInit
-): Promise<OutputType> => {
-  const query = params?.userId ? `?userId=${params.userId}` : '';
-  const result = await fetch(`${API_URL}/user/comments${query}`, {
-    method: "GET",
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-  });
-  if (!result.ok) {
-    const errorObject = superjson.parse<{ error: string }>(
-      await result.text()
-    );
-    throw new Error(errorObject.error);
-  }
-  return superjson.parse<OutputType>(await result.text());
-};

@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPosts, PostWithCounts } from "../endpoints/posts_GET.schema";
+import { PostWithCounts } from "../endpoints/posts_GET.schema";
+import { getPosts } from "../endpoints/posts_GET.client";
+
 
 import { InputType } from "../endpoints/posts_GET.schema";
 

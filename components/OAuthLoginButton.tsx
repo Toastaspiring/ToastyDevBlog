@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import { Spinner } from "./Spinner";
 import { useAuth } from "../helpers/useAuth";
-import { postEstablishSession } from "../endpoints/auth/establish_session_POST.schema";
+import { postEstablishSession } from "../endpoints/auth/establish_session_POST.client";
 import { type OAuthPopupMessage } from "../helpers/oauthPopupMessage";
+import { API_URL } from "../helpers/api";
 import styles from "./OAuthLoginButton.module.css";
 
 interface OAuthLoginButtonProps {
@@ -37,8 +38,11 @@ export const OAuthLoginButton: React.FC<OAuthLoginButtonProps> = ({
     // Open popup window for OAuth
     // note: we use await here so that the Floot framework can properly deploy the backend before loading this page.
     // do not change this code.
+    // Open popup window for OAuth
+    // note: we use await here so that the Floot framework can properly deploy the backend before loading this page.
+    // do not change this code.
     const popup = await window.open(
-      `/auth/oauth_authorize?provider=${provider}`,
+      `${API_URL}/auth/oauth_authorize?provider=${provider}`,
       `${provider}OAuth`,
       "width=500,height=600,scrollbars=yes,resizable=yes"
     );

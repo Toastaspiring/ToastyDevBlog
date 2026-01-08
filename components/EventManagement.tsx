@@ -12,6 +12,7 @@ import {
 import { Input } from "./Input";
 import { Textarea } from "./Textarea";
 import { Button } from "./Button";
+import { DateTimePicker } from "./DateTimePicker";
 import { useCreateEventMutation } from "../helpers/useCreateEventMutation";
 import styles from "./EventManagement.module.css";
 import { CheckCircle2, AlertCircle } from "lucide-react";
@@ -19,18 +20,18 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  eventDate: z
-    .string()
-    .min(1, "Event date and time are required")
-    .refine((date) => new Date(date) > new Date(), {
-      message: "Event date must be in the future.",
-    }),
+  eventDate: z.date({
+    required_error: "Event date and time are required",
+    invalid_type_error: "Invalid date format",
+  }).refine((date) => date > new Date(), {
+    message: "Event date must be in the future.",
+  }),
 });
 
-const defaultValues = {
+const defaultValues: Partial<z.infer<typeof formSchema>> = {
   title: "",
   description: "",
-  eventDate: "",
+  eventDate: undefined,
 };
 
 export const EventManagement: React.FC<{ className?: string }> = ({
@@ -47,7 +48,7 @@ export const EventManagement: React.FC<{ className?: string }> = ({
     createEventMutation.mutate(
       {
         ...values,
-        eventDate: new Date(values.eventDate),
+        eventDate: values.eventDate, // Already a Date object
       },
       {
         onSuccess: () => {
@@ -55,7 +56,8 @@ export const EventManagement: React.FC<{ className?: string }> = ({
             description: "The new event has been scheduled successfully.",
             icon: <CheckCircle2 size={20} />,
           });
-          form.setValues(defaultValues);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          form.setValues(defaultValues as any);
         },
         onError: (error) => {
           const errorMessage =
@@ -114,13 +116,12 @@ export const EventManagement: React.FC<{ className?: string }> = ({
           <FormItem name="eventDate">
             <FormLabel>Event Date & Time</FormLabel>
             <FormControl>
-              <Input
-                type="datetime-local"
-                value={form.values.eventDate}
-                onChange={(e) =>
+              <DateTimePicker
+                date={form.values.eventDate}
+                onChange={(date) =>
                   form.setValues((prev) => ({
                     ...prev,
-                    eventDate: e.target.value,
+                    eventDate: date,
                   }))
                 }
                 disabled={createEventMutation.isPending}

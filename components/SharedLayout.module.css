@@ -59,6 +59,14 @@
   display: flex;
   align-items: center;
   width: 200px;
+  transition: all var(--animation-duration-normal) ease;
+}
+
+.searchInputWrapper:focus-within {
+  width: 300px;
+  /* Expand more */
+  margin-left: -100px;
+  /* Shift left to anchor right side */
 }
 
 .searchIcon {
@@ -66,6 +74,8 @@
   left: var(--spacing-3);
   color: var(--muted-foreground);
   pointer-events: none;
+  z-index: 2;
+  /* Ensure on top of background */
 }
 
 .searchInput {
@@ -84,17 +94,17 @@
 
 .searchInput:focus {
   background-color: var(--card);
-  width: 240px;
-  transition: width var(--animation-duration-normal) ease;
+  /* Width controlled by wrapper now */
 }
 
 @media (max-width: 768px) {
   .searchInputWrapper {
     width: 150px;
   }
-  
-  .searchInput:focus {
+
+  .searchInputWrapper:focus-within {
     width: 180px;
+    margin-left: -30px;
   }
 }
 
@@ -105,7 +115,7 @@
   height: 36px;
 }
 
-.avatarButton > :global(.c-avatar) {
+.avatarButton> :global(.c-avatar) {
   width: 36px;
   height: 36px;
   border-width: 1px;

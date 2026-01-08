@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "../endpoints/user/id_GET.schema";
+import { getUserById } from "../endpoints/user/id_GET.client";
 
 export const useUserByIdQuery = (id: number) => {
     return useQuery({

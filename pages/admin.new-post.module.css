@@ -1,11 +1,244 @@
-.main {
-  width: 100%;
+.mainContainer {
   display: flex;
-  justify-content: center;
-  padding: var(--spacing-8) var(--spacing-4);
-  /* background-color removed */
-  min-height: 100vh;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--background);
+  overflow: hidden;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.editorContainer {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Panel Styles */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.resizeHandle {
+  width: 2px;
+  background-color: var(--border);
+  transition: background-color 0.2s;
+  cursor: col-resize;
+  flex-shrink: 0;
+}
+
+.resizeHandle:hover,
+.resizeHandle:active {
+  background-color: var(--primary);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-6);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+  flex-wrap: wrap;
+}
+
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding-right: var(--spacing-2);
+  margin-right: var(--spacing-2);
+  border-right: 1px solid var(--border);
+}
+
+.toolbarGroup:last-child {
+  border-right: none;
+}
+
+/* Custom Toolbar Button */
+.toolbarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  color: var(--muted-foreground);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toolbarBtn:hover {
+  background-color: var(--accent);
+  /* High contrast background on hover */
+  color: var(--accent-foreground);
+}
+
+.toolbarBtn:active {
+  transform: translateY(1px);
+}
+
+/* Editor Area - Left Panel */
+.editorScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-8);
+  background-color: var(--background);
+}
+
+.editorContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.titleInput {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: var(--font-family-heading);
+  width: 100%;
+  color: var(--foreground);
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-bottom: var(--spacing-2);
+}
+
+.titleInput::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.slugInput {
+  font-family: var(--font-family-monospace);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-bottom: var(--spacing-6);
+}
+
+/* SimpleMDE Overrides */
+.editorContent :global(.EasyMDEContainer) {
+  border: none !important;
+}
+
+.editorContent :global(.CodeMirror) {
+  border: none !important;
+  background-color: transparent !important;
+  font-family: var(--font-family-serif);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  padding: 0 !important;
+  color: var(--foreground) !important;
+  height: auto !important;
+  /* Force expansion */
+  min-height: 300px;
+}
+
+.editorContent :global(.CodeMirror-scroll) {
+  overflow-y: hidden !important;
+  /* Hide internal scrollbar */
+  overflow-x: auto;
+  min-height: 300px;
+}
+
+.editorContent :global(.editor-toolbar) {
+  display: none !important;
+  /* Hide default toolbar */
+}
+
+.editorContent :global(.editor-statusbar) {
+  display: none !important;
+}
+
+.editorContent :global(.CodeMirror-cursor) {
+  border-left-color: var(--foreground) !important;
+  border-left-width: 2px;
+}
+
+/* Preview Area - Right Panel */
+.previewPanel {
+  background-color: var(--background);
+  /* Or maybe a slightly different shade? */
+  border-left: 1px solid var(--border);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.previewScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-8);
+  /* background-color: var(--surface);  Optional: distinguish preview area */
+}
+
+.previewContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.previewLabel {
+  display: flex;
+  align-items: flex-start;
+  /* Align text to top */
+  /* height: 53px;  <-- Controlled by JS style */
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  padding: var(--spacing-4) var(--spacing-6) var(--spacing-2);
+  /* Increased top padding for alignment */
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+  /* Match editor background */
+  font-weight: 600;
+}
+
+.loaderCenter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 .form {
   width: 100%;
@@ -192,4 +425,30 @@
     padding: var(--spacing-6);
     min-height: 80vh;
   }
+}
+
+/* Scrollbar Integration */
+.editorScrollArea::-webkit-scrollbar,
+.previewScrollArea::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.editorScrollArea::-webkit-scrollbar-track,
+.previewScrollArea::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 1px solid var(--border);
+}
+
+.editorScrollArea::-webkit-scrollbar-thumb,
+.previewScrollArea::-webkit-scrollbar-thumb {
+  background-color: var(--muted);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--background);
+  /* Creates padding effect */
+}
+
+.editorScrollArea::-webkit-scrollbar-thumb:hover,
+.previewScrollArea::-webkit-scrollbar-thumb:hover {
+  background-color: var(--muted-foreground);
 }

@@ -13,18 +13,4 @@ export type OutputType =
     message?: string;
   };
 
-export const postLogout = async (
-  body: z.infer<typeof schema> = {},
-  init?: RequestInit
-): Promise<OutputType> => {
-  const result = await fetch(`/auth/logout`, {
-    method: "POST",
-    body: JSON.stringify(body),
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-  });
-  return result.json();
-};
+

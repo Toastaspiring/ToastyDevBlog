@@ -1,0 +1,68 @@
+.embla {
+    height: 200px;
+    /* Taller for nicer visual */
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    touch-action: pan-x;
+    /* Allow vertical drag */
+    cursor: grab;
+    /* Mask for top/bottom fade */
+    mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 40%,
+            black 60%,
+            transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 40%,
+            black 60%,
+            transparent 100%);
+}
+
+.emblaContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Center the first item initially if needed, handled by padding usually */
+}
+
+.emblaSlide {
+    flex: 0 0 32px;
+    /* Fixed height items */
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0.4;
+    user-select: none;
+}
+
+.emblaSlideSelected {
+    color: var(--foreground);
+    font-weight: 600;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.editInput {
+    width: 100%;
+    max-width: 80px;
+    background: var(--background);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+    text-align: center;
+    outline: none;
+}
+
+.editInput:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-alpha-20);
+}

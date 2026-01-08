@@ -4,6 +4,7 @@ import { Skeleton } from "./Skeleton";
 import { ChristmasHat } from "./ChristmasHat";
 import styles from "./EventCountdown.module.css";
 import { Calendar, Clock } from "lucide-react";
+import { useGlobalLoading } from "../helpers/GlobalLoadingContext";
 
 type TimeLeft = {
   days: number;
@@ -78,8 +79,9 @@ export const EventCountdown: React.FC<{ className?: string }> = ({
   className,
 }) => {
   const { data: nextEvent, isFetching, error } = useNextEventQuery();
+  const { isGlobalLoading } = useGlobalLoading();
 
-  if (isFetching) {
+  if (isFetching || isGlobalLoading) {
     return (
       <div className={`${styles.container} ${className || ""}`}>
         <Skeleton style={{ height: "2.5rem", width: "60%", marginBottom: 'var(--spacing-4)' }} />
@@ -129,12 +131,8 @@ export const EventCountdown: React.FC<{ className?: string }> = ({
 
   return (
     <div className={`${styles.container} ${className || ""}`}>
-      {/* <ChristmasHat className={styles.christmasHat} /> */}
-      {/* Commented out hat as it fits winter theme, but maybe not stars. User didn't ask to remove it explicitly from the *event* view, but the snow was in the 'no event' view. The hat is in the 'event' view. I will leave the hat alone in the main view for now unless it conflicts. Wait, lines 152 has the hat?
-      Actually, the user replaced "snow in the event section". The snow was ONLY in the !nextEvent (no event) section.
-      The Hat is in the `nextEvent` (has event) section.
-      I'll focus on the `!nextEvent` section first.
-      */}
+      <StarrySky />
+      <div className={styles.ground} />
       <h2 className={styles.title}>{nextEvent.title}</h2>
       {nextEvent.description && (
         <p className={styles.description}>{nextEvent.description}</p>

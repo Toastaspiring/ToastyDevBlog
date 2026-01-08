@@ -30,7 +30,7 @@ export async function handle(request: Request) {
     return response;
   } catch (error) {
     if (error instanceof NotAuthenticatedError) {
-      return Response.json({ error: "Not authenticated" }, { status: 401 });
+      return Response.json({ user: null }, { status: 200 });
     }
     console.error("Session validation error:", error);
     return Response.json(

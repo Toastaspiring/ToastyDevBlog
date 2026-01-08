@@ -46,12 +46,18 @@ export async function handle(request: Request) {
       );
     }
   } catch (error) {
+    if (error instanceof Error && error.name === "NotAuthenticatedError") {
+      return new Response(
+        superjson.stringify({ error: "Not authenticated" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
     console.error("Error toggling like:", error);
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred";
     return new Response(
       superjson.stringify({ error: "Failed to toggle like", details: errorMessage }),
-      { status: 400 }
+      { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
 }

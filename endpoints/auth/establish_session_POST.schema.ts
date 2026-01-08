@@ -21,19 +21,4 @@ export type OutputType =
     error: string;
   };
 
-export const postEstablishSession = async (
-  body: z.infer<typeof schema>,
-  init?: RequestInit
-): Promise<OutputType> => {
-  const validatedInput = schema.parse(body);
-  const result = await fetch(`/auth/establish_session`, {
-    method: "POST",
-    body: JSON.stringify(validatedInput),
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-  });
-  return result.json();
-};
+

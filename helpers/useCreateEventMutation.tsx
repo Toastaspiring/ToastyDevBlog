@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  postEventCreate,
-  InputType,
-} from "../endpoints/event/create_POST.schema";
+import { InputType } from "../endpoints/event/create_POST.schema";
+import { postEventCreate } from "../endpoints/event/create_POST.client";
 import { NEXT_EVENT_QUERY_KEY } from "./useNextEventQuery";
 
 export const useCreateEventMutation = () => {

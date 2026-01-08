@@ -16,8 +16,11 @@ import { Spinner } from "./Spinner";
 import styles from "./PasswordRegisterForm.module.css";
 import { useAuth } from "../helpers/useAuth";
 import {
-  schema,
   postRegister,
+} from "../endpoints/auth/register_with_password_POST.client";
+import {
+  schema,
+  InputType,
 } from "../endpoints/auth/register_with_password_POST.schema";
 
 export type RegisterFormData = z.infer<typeof schema>;

@@ -1,10 +1,11 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "./Tooltip";
 import { SonnerToaster } from "./SonnerToaster";
 import { ScrollToHashElement } from "./ScrollToHashElement";
 import { AuthProvider } from "../helpers/useAuth";
-import { switchToDarkMode } from "../helpers/themeMode";
+import { switchToDarkMode, loadTheme } from "../helpers/themeMode";
+import { GlobalLoadingProvider } from "../helpers/GlobalLoadingContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,24 +17,26 @@ const queryClient = new QueryClient({
   },
 });
 
+// Initialize theme (Defaults to Dark, or loads user pref) immediately
+if (typeof window !== "undefined") {
+  loadTheme();
+}
+
 export const GlobalContextProviders = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  useEffect(() => {
-    // Initialize dark mode by default when the app loads
-    switchToDarkMode();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ScrollToHashElement />
       <AuthProvider>
-        <TooltipProvider>
-          {children}
-          <SonnerToaster />
-        </TooltipProvider>
+        <GlobalLoadingProvider>
+          <TooltipProvider>
+            {children}
+            <SonnerToaster />
+          </TooltipProvider>
+        </GlobalLoadingProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

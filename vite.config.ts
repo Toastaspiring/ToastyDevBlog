@@ -18,6 +18,14 @@ export default defineConfig(() => ({
   build: {
     assetsDir: "_assets",
   },
-  base: "/ToastyDevBlog/",
+  base: "/",
+  server: {
+    proxy: {
+      "/_api": {
+        target: "http://localhost:3344",
+        changeOrigin: true,
+      },
+    },
+  },
 }));
 

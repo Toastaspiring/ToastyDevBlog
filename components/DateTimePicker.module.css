@@ -1,0 +1,64 @@
+.popoverContent {
+    width: auto;
+    max-width: 90vw;
+    padding: 0;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+}
+
+.datePickerContainer {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--card);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 640px) {
+    .datePickerContainer {
+        max-width: 100%;
+        padding: var(--spacing-2);
+    }
+}
+
+.wheelsWrapper {
+    display: flex;
+    position: relative;
+    height: 200px;
+    background-color: var(--background);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+/* Visual Highlight Line */
+.selectionHighlight {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 32px;
+    /* Match ITEM_HEIGHT */
+    margin-top: -16px;
+    /* Half height */
+    background-color: var(--accent);
+    opacity: 0.1;
+    pointer-events: none;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+}
+
+.triggerButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    width: 100%;
+    justify-content: flex-start;
+    font-weight: normal;
+    text-align: left;
+}

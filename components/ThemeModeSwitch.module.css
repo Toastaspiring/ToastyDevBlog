@@ -10,6 +10,13 @@
   /* Prepare for border transition */
 }
 
+.themeButton:focus,
+.themeButton:focus-visible {
+  outline: none !important;
+  border-color: transparent;
+  box-shadow: none !important;
+}
+
 /* "instead of blue fill, make blue border" -> For the NAVBAR button: "make it a white border appearing ( fade in / fade out ) on hover" 
    And "I don't want the blue border around the icon" in normal state.
    "change the border color of white theme button to white" -> adaptive to foreground.

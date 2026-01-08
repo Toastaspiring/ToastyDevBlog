@@ -6,10 +6,11 @@ import { PostCard } from "../components/PostCard";
 import { PostCardSkeleton } from "../components/PostCardSkeleton";
 import { EventCountdown } from "../components/EventCountdown";
 import { CommentsColumn } from "../components/CommentsColumn";
+import { useGlobalLoading } from "../helpers/GlobalLoadingContext";
 import styles from "./_index.module.css";
 
 const HomePage: React.FC = () => {
-  const { data: posts, isFetching, error } = usePostsQuery();
+  const { data: posts, isFetching, isPending, error } = usePostsQuery();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
@@ -79,8 +80,10 @@ const HomePage: React.FC = () => {
     }
   }, [posts, searchParams, activePostId]);
 
+  const { isGlobalLoading } = useGlobalLoading();
+
   const renderContent = () => {
-    if (isFetching) {
+    if (isFetching || isPending || isGlobalLoading) {
       return (
         <div className={styles.postsList}>
           {Array.from({ length: 6 }).map((_, index) => (

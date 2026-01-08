@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { searchUsers } from "../endpoints/user/search_GET.schema";
+import { searchUsers } from "../endpoints/user/search_GET.client";
 
 export const useUsersSearchQuery = (query: string) => {
     return useQuery({

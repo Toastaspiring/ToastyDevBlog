@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getEventNext } from "../endpoints/event/next_GET.schema";
+import { getEventNext } from "../endpoints/event/next_GET.client";
 
 export const NEXT_EVENT_QUERY_KEY = ["events", "next"] as const;
 

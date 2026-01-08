@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  postPostLike,
-  InputType,
-} from "../endpoints/post/like_POST.schema";
+import { InputType } from "../endpoints/post/like_POST.schema";
+import { postPostLike } from "../endpoints/post/like_POST.client";
 import { POSTS_QUERY_KEY } from "./usePostsQuery";
 
 export const useToggleLikeMutation = () => {

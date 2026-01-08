@@ -17,26 +17,4 @@ export type UserSearchResult = {
 
 export type OutputType = UserSearchResult[];
 
-import { API_URL } from "../../helpers/api";
 
-export const searchUsers = async (
-    query: string,
-    init?: RequestInit
-): Promise<OutputType> => {
-    const params = new URLSearchParams({ query });
-    const result = await fetch(`${API_URL}/users/search?${params.toString()}`, {
-        method: "GET",
-        ...init,
-        headers: {
-            "Content-Type": "application/json",
-            ...(init?.headers ?? {}),
-        },
-    });
-    if (!result.ok) {
-        const errorObject = superjson.parse<{ error: string }>(
-            await result.text()
-        );
-        throw new Error(errorObject.error);
-    }
-    return superjson.parse<OutputType>(await result.text());
-};

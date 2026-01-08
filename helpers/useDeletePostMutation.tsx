@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { InputType, deletePost } from "../endpoints/post/delete_DELETE.schema";
+import { InputType } from "../endpoints/post/delete_DELETE.schema";
+import { deletePost } from "../endpoints/post/delete_DELETE.client";
 
 export const useDeletePostMutation = () => {
     const queryClient = useQueryClient();

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A dark-themed developer blog platform with GitHub authentication.",
   "scripts": {
-    "dev": "pnpm tsx server.ts",
+    "dev": "concurrently \"pnpm run server\" \"pnpm run frontend\"",
+    "server": "pnpm tsx server.ts",
+    "frontend": "vite",
     "build": "vite build",
     "start": "pnpm tsx server.ts",
     "lint": "eslint ."
@@ -79,6 +81,7 @@
   "devDependencies": {
     "@types/node": "^25.0.3",
     "@types/react-dom": "^19.2.3",
-    "@types/react-helmet": "^6.1.11"
+    "@types/react-helmet": "^6.1.11",
+    "concurrently": "^9.2.1"
   }
 }
