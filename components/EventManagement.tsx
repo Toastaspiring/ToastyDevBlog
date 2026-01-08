@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import {
@@ -36,6 +36,70 @@ const defaultValues: Partial<z.infer<typeof formSchema>> = {
   eventDate: undefined,
 };
 
+// Sub-component to handle individual event state
+const EventCard = ({ event }: { event: any }) => {
+  const deleteEventMutation = useDeleteEventMutation();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const eventDate = new Date(event.eventDate);
+  const isPast = eventDate < new Date();
+
+  return (
+    <div className={`${styles.eventCard} ${isPast ? styles.pastEvent : ''} ${isDeleting ? styles.itemDeleting : ''}`}>
+      <div className={styles.eventInfo}>
+        <h4 className={styles.eventTitle}>{event.title}</h4>
+        {event.description && (
+          <p className={styles.eventDescription}>{event.description}</p>
+        )}
+        <div className={styles.eventMeta}>
+          <span className={styles.metaItem}>
+            <Calendar size={14} />
+            {eventDate.toLocaleDateString()}
+          </span>
+          <span className={styles.metaItem}>
+            <Clock size={14} />
+            {eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+      </div>
+
+      <button
+        className={styles.deleteButton}
+        title="Delete Event"
+        onClick={() => {
+          if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
+            setIsDeleting(true);
+            deleteEventMutation.mutate(
+              { id: event.id },
+              {
+                onSuccess: () => {
+                  toast.success("Event Deleted", {
+                    description: "The event has been removed successfully.",
+                    icon: <CheckCircle2 size={20} />,
+                  });
+                },
+                onError: (error) => {
+                  setIsDeleting(false);
+                  const errorMessage =
+                    error instanceof Error
+                      ? error.message
+                      : "An unknown error occurred.";
+                  toast.error("Deletion Failed", {
+                    description: errorMessage,
+                    icon: <AlertCircle size={20} />,
+                  });
+                },
+              }
+            );
+          }
+        }}
+        disabled={deleteEventMutation.isPending || isDeleting}
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  );
+};
+
 export const EventManagement: React.FC<{ className?: string }> = ({
   className,
 }) => {
@@ -45,14 +109,13 @@ export const EventManagement: React.FC<{ className?: string }> = ({
   });
 
   const createEventMutation = useCreateEventMutation();
-  const deleteEventMutation = useDeleteEventMutation();
   const { data: events, isLoading: eventsLoading } = useEventsQuery();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     createEventMutation.mutate(
       {
         ...values,
-        eventDate: values.eventDate, // Already a Date object
+        eventDate: values.eventDate,
       },
       {
         onSuccess: () => {
@@ -151,63 +214,9 @@ export const EventManagement: React.FC<{ className?: string }> = ({
           <p className={styles.loadingText}>Loading events...</p>
         ) : events && events.length > 0 ? (
           <div className={styles.eventsList}>
-            {events.map((event) => {
-              const eventDate = new Date(event.eventDate);
-              const isPast = eventDate < new Date();
-
-              return (
-                <div key={event.id} className={`${styles.eventCard} ${isPast ? styles.pastEvent : ''}`}>
-                  <div className={styles.eventInfo}>
-                    <h4 className={styles.eventTitle}>{event.title}</h4>
-                    {event.description && (
-                      <p className={styles.eventDescription}>{event.description}</p>
-                    )}
-                    <div className={styles.eventMeta}>
-                      <span className={styles.metaItem}>
-                        <Calendar size={14} />
-                        {eventDate.toLocaleDateString()}
-                      </span>
-                      <span className={styles.metaItem}>
-                        <Clock size={14} />
-                        {eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  </div>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
-                        deleteEventMutation.mutate(
-                          { id: event.id },
-                          {
-                            onSuccess: () => {
-                              toast.success("Event Deleted", {
-                                description: "The event has been removed successfully.",
-                                icon: <CheckCircle2 size={20} />,
-                              });
-                            },
-                            onError: (error) => {
-                              const errorMessage =
-                                error instanceof Error
-                                  ? error.message
-                                  : "An unknown error occurred.";
-                              toast.error("Deletion Failed", {
-                                description: errorMessage,
-                                icon: <AlertCircle size={20} />,
-                              });
-                            },
-                          }
-                        );
-                      }
-                    }}
-                    disabled={deleteEventMutation.isPending}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
-              );
-            })}
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
           </div>
         ) : (
           <p className={styles.noEvents}>No events created yet.</p>

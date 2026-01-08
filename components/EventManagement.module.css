@@ -49,6 +49,7 @@
 }
 
 .eventCard {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -57,7 +58,7 @@
   background-color: var(--background);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .eventCard:hover {
@@ -69,8 +70,44 @@
   opacity: 0.6;
 }
 
+.itemDeleting {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
 .eventInfo {
   flex: 1;
+  padding-right: var(--spacing-8);
+  /* Make room for the absolute delete button */
+}
+
+.deleteButton {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted-foreground);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.deleteButton:hover {
+  background-color: var(--destructive-foreground);
+  color: var(--destructive);
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .eventTitle {
