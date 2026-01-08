@@ -6,7 +6,7 @@ import { Skeleton } from "./Skeleton";
 import { OutputType as EventsListType } from "../endpoints/events/list_GET.schema";
 import styles from "./UpcomingEventsList.module.css";
 import { toast } from "sonner";
-import { useUserSessionQuery } from "../helpers/useUserSessionQuery";
+import { useAuth } from "../helpers/useAuth";
 
 type Event = EventsListType[0];
 
@@ -95,9 +95,9 @@ const EventCardSkeleton: React.FC = () => {
 
 export const UpcomingEventsList: React.FC = () => {
   const { data: events, isFetching, error } = useEventsQuery();
-  const { data: userSession } = useUserSessionQuery();
+  const { authState } = useAuth();
 
-  const isAdmin = userSession?.user?.role === "admin";
+  const isAdmin = authState.type === "authenticated" && authState.user.role === "admin";
 
   if (isFetching) {
     return (
