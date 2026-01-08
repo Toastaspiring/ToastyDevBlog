@@ -1,21 +1,67 @@
-import React from "react";
-import { AlertCircle, Calendar, Info, User } from "lucide-react";
+import React, { useState } from "react";
+import { AlertCircle, Calendar, Info, User, Trash2, CheckCircle2 } from "lucide-react";
 import { useEventsQuery } from "../helpers/useEventsQuery";
+import { useDeleteEventMutation } from "../helpers/useDeleteEventMutation";
 import { Skeleton } from "./Skeleton";
 import { OutputType as EventsListType } from "../endpoints/events/list_GET.schema";
 import styles from "./UpcomingEventsList.module.css";
+import { toast } from "sonner";
+import { useUserSessionQuery } from "../helpers/useUserSessionQuery";
 
 type Event = EventsListType[0];
 
-const EventCard: React.FC<{ event: Event }> = ({ event }) => {
+const EventCard: React.FC<{ event: Event; isAdmin: boolean }> = ({ event, isAdmin }) => {
+  const deleteEventMutation = useDeleteEventMutation();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const formattedDate = new Date(event.eventDate).toLocaleString(undefined, {
     dateStyle: "full",
     timeStyle: "short",
   });
 
+  const handleDelete = () => {
+    if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
+      setIsDeleting(true);
+      deleteEventMutation.mutate(
+        { id: event.id },
+        {
+          onSuccess: () => {
+            toast.success("Event Deleted", {
+              description: "The event has been removed successfully.",
+              icon: <CheckCircle2 size={16} />,
+            });
+          },
+          onError: (error) => {
+            setIsDeleting(false);
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : "An unknown error occurred.";
+            toast.error("Deletion Failed", {
+              description: errorMessage,
+              icon: <AlertCircle size={16} />,
+            });
+          },
+        }
+      );
+    }
+  };
+
   return (
-    <div className={styles.card}>
-      <h3 className={styles.cardTitle}>{event.title}</h3>
+    <div className={`${styles.card} ${isDeleting ? styles.cardDeleting : ''}`}>
+      <div className={styles.cardHeader}>
+        <h3 className={styles.cardTitle}>{event.title}</h3>
+        {isAdmin && (
+          <button
+            className={styles.deleteButton}
+            onClick={handleDelete}
+            disabled={deleteEventMutation.isPending || isDeleting}
+            aria-label="Delete event"
+          >
+            <Trash2 size={16} />
+          </button>
+        )}
+      </div>
       {event.description && (
         <p className={styles.cardDescription}>{event.description}</p>
       )}
@@ -49,6 +95,9 @@ const EventCardSkeleton: React.FC = () => {
 
 export const UpcomingEventsList: React.FC = () => {
   const { data: events, isFetching, error } = useEventsQuery();
+  const { data: userSession } = useUserSessionQuery();
+
+  const isAdmin = userSession?.user?.role === "admin";
 
   if (isFetching) {
     return (
@@ -84,7 +133,7 @@ export const UpcomingEventsList: React.FC = () => {
   return (
     <div className={styles.listContainer}>
       {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <EventCard key={event.id} event={event} isAdmin={!!isAdmin} />
       ))}
     </div>
   );
