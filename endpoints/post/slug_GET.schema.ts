@@ -38,11 +38,13 @@ export type PostDetail = {
 
 export type OutputType = PostDetail;
 
+import { API_URL } from "../../helpers/api";
+
 export const getPostBySlug = async (
     slug: string,
     init?: RequestInit
 ): Promise<OutputType> => {
-    const result = await fetch(`/_api/post/by-slug/${slug}`, {
+    const result = await fetch(`${API_URL}/post/by-slug/${slug}`, {
         method: "GET",
         ...init,
         headers: {

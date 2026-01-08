@@ -17,12 +17,14 @@ export type UserSearchResult = {
 
 export type OutputType = UserSearchResult[];
 
+import { API_URL } from "../../helpers/api";
+
 export const searchUsers = async (
     query: string,
     init?: RequestInit
 ): Promise<OutputType> => {
     const params = new URLSearchParams({ query });
-    const result = await fetch(`/_api/users/search?${params.toString()}`, {
+    const result = await fetch(`${API_URL}/users/search?${params.toString()}`, {
         method: "GET",
         ...init,
         headers: {

@@ -18,11 +18,13 @@ export type UserLikedPost = {
 
 export type OutputType = UserLikedPost[];
 
+import { API_URL } from "../../helpers/api";
+
 export const getUserLikedPosts = async (
   body?: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
-  const result = await fetch(`/_api/user/liked-posts`, {
+  const result = await fetch(`${API_URL}/user/liked-posts`, {
     method: "GET",
     ...init,
     headers: {

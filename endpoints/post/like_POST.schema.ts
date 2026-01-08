@@ -11,12 +11,14 @@ export type OutputType = {
   liked: boolean;
 };
 
+import { API_URL } from "../../helpers/api";
+
 export const postPostLike = async (
   body: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`/_api/post/like`, {
+  const result = await fetch(`${API_URL}/post/like`, {
     method: "POST",
     body: superjson.stringify(validatedInput),
     ...init,

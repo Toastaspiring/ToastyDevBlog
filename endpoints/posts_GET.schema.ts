@@ -29,6 +29,10 @@ export type PostWithCounts = {
 
 export type OutputType = PostWithCounts[];
 
+import { API_URL } from "../helpers/api";
+
+// ... imports
+
 export const getPosts = async (
   body?: z.infer<typeof schema>,
   init?: RequestInit
@@ -36,7 +40,7 @@ export const getPosts = async (
   const queryParams = new URLSearchParams();
   if (body?.mode) queryParams.set("mode", body.mode);
 
-  const result = await fetch(`/_api/posts?${queryParams.toString()}`, {
+  const result = await fetch(`${API_URL}/posts?${queryParams.toString()}`, {
     method: "GET",
     ...init,
     headers: {

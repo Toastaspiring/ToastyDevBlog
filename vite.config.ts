@@ -18,4 +18,6 @@ export default defineConfig(() => ({
   build: {
     assetsDir: "_assets",
   },
+  base: "/ToastyDevBlog/",
 }));
+

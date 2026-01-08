@@ -24,12 +24,14 @@ export type CommentWithUser = {
 
 export type OutputType = CommentWithUser;
 
+import { API_URL } from "../../helpers/api";
+
 export const postPostComment = async (
   body: z.infer<typeof schema>,
   init?: RequestInit
 ): Promise<OutputType> => {
   const validatedInput = schema.parse(body);
-  const result = await fetch(`/_api/post/comment`, {
+  const result = await fetch(`${API_URL}/post/comment`, {
     method: "POST",
     body: superjson.stringify(validatedInput),
     ...init,

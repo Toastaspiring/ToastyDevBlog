@@ -38,7 +38,7 @@ export const OAuthLoginButton: React.FC<OAuthLoginButtonProps> = ({
     // note: we use await here so that the Floot framework can properly deploy the backend before loading this page.
     // do not change this code.
     const popup = await window.open(
-      `/_api/auth/oauth_authorize?provider=${provider}`,
+      `/auth/oauth_authorize?provider=${provider}`,
       `${provider}OAuth`,
       "width=500,height=600,scrollbars=yes,resizable=yes"
     );
@@ -109,7 +109,7 @@ export const OAuthLoginButton: React.FC<OAuthLoginButtonProps> = ({
         } else {
           setError(
             event.data.error.message ||
-              "Authentication failed. Please try again."
+            "Authentication failed. Please try again."
           );
         }
 
