@@ -26,6 +26,7 @@ export function useForm<T extends z.ZodType<any, any>>({
   handleSubmit: (
     onSubmit: (data: z.infer<T>) => void,
   ) => (e: React.FormEvent) => void;
+  reset: (newValues?: Partial<z.infer<T>>) => void;
 } {
   const [values, setValues] = React.useState<Record<string, any>>(
     defaultValues as Record<string, any>,
@@ -67,8 +68,8 @@ export function useForm<T extends z.ZodType<any, any>>({
         if (extraPropertyErrors.length > 0) {
           throw new Error(
             "Extra properties detected in form values:" +
-              extraPropertyErrors.map((e) => e.message).join(", ") +
-              ". Either update the schema or remove these values",
+            extraPropertyErrors.map((e) => e.message).join(", ") +
+            ". Either update the schema or remove these values",
           );
         }
 
@@ -165,6 +166,14 @@ export function useForm<T extends z.ZodType<any, any>>({
     [validateForm, values],
   );
 
+  const reset = React.useCallback(
+    (newValues?: Partial<Data>) => {
+      setValues((newValues as Record<string, any>) || (defaultValues as Record<string, any>));
+      setErrors({});
+    },
+    [defaultValues]
+  );
+
   const oldValueRef = useRef(values);
   useEffect(() => {
     const diffKeys: string[] = [];
@@ -194,6 +203,7 @@ export function useForm<T extends z.ZodType<any, any>>({
     setFieldError,
     handleSubmit,
     defaultValues,
+    reset,
   };
 }
 
