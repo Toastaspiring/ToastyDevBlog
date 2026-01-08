@@ -135,7 +135,7 @@ app.get('/events/list', async (c) => {
 })
 
 // User Routes
-app.get('/users/search', async (c) => {
+app.get('/user/search', async (c) => {
     const response = await handleUserSearch(c.req.raw)
     return response
 })

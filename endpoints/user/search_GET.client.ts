@@ -7,7 +7,7 @@ export const searchUsers = async (
     init?: RequestInit
 ): Promise<OutputType> => {
     const params = new URLSearchParams({ query });
-    const result = await fetch(`${API_URL}/users/search?${params.toString()}`, {
+    const result = await fetch(`${API_URL}/user/search?${params.toString()}`, {
         method: "GET",
         credentials: "include",
         ...init,
