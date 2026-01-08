@@ -199,18 +199,10 @@ const StarrySky = React.memo(() => {
 
       const now = Date.now();
 
-      ctx.fillStyle = '#FFFFFF'; // Set color once
-
-      // Batch drawing? 
-      // Individual path calls are expensive in JS loop but unavoidable for circles with different opacities.
-      // Optimization: Group stars by opacity? Too complex for this.
-      // Just use globalAlpha.
-
       stars.forEach(star => {
         ctx.beginPath();
-        const alpha = Math.abs(Math.sin(now * 0.001 * star.speed + star.offset)) * 0.8 + 0.2;
-        ctx.globalAlpha = alpha; // Much faster than parsing rgba string
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(Date.now() * 0.001 * star.speed + star.x)) * 0.8 + 0.2})`;
         ctx.fill();
       });
 
