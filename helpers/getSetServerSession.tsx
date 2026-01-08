@@ -80,10 +80,13 @@ export async function setServerSession(
     .setExpirationTime("1d")
     .sign(encoder.encode(secret));
 
+  // Only use Secure flag if we're on HTTPS
+  const isSecure = process.env.NODE_ENV === 'production' && process.env.USE_HTTPS === 'true';
+
   const cookieValue = [
     `${CookieName}=${token}`,
     "HttpOnly",
-    "Secure",
+    ...(isSecure ? ["Secure"] : []),
     "SameSite=Lax",
     "Path=/",
     `Max-Age=${SessionExpirationSeconds}`,
