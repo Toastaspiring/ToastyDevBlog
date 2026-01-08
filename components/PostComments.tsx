@@ -16,12 +16,15 @@ import { Spinner } from "./Spinner";
 
 import styles from "./PostComments.module.css";
 
+import { useDebounce } from "../helpers/useDebounce";
+
 // Simple suggestion list component
 const SuggestionList: React.FC<{
     query: string;
     onSelect: (user: { displayName: string }) => void;
 }> = ({ query, onSelect }) => {
-    const { data: users, isLoading } = useUsersSearchQuery(query);
+    const debouncedQuery = useDebounce(query, 1000);
+    const { data: users, isLoading } = useUsersSearchQuery(debouncedQuery);
 
     if (!query || (!isLoading && (!users || users.length === 0))) return null;
 
