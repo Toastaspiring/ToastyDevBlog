@@ -131,7 +131,7 @@ app.get('/_api/users/:id', async c => {
     return c.text("Error loading endpoint code " + e.message, 500)
   }
 })
-app.get('/_api/users/search', async c => {
+app.get('/_api/user/search', async c => {
   try {
     const { handle } = await import("./endpoints/user/search_GET.js");
     let request = c.req.raw;
