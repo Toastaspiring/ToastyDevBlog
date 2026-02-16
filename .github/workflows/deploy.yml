@@ -37,7 +37,7 @@ jobs:
       - name: Check Frontend
         run: |
           echo "Checking frontend..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz/)
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://toastydevblog.xyz)
           if [ $response -eq 200 ]; then
             echo "✅ Frontend is healthy (HTTP $response)"
           else
